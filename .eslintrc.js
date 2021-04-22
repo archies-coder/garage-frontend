@@ -31,6 +31,7 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': 0,
         '@typescript-eslint/ban-ts-comment': 0,
         'react/display-name': 0,
-        'react/no-unescaped-entities': 0
+        'react/no-unescaped-entities': 0,
+        'no-debugger': 'warn',
     },
 }

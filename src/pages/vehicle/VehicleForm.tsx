@@ -16,7 +16,7 @@ import { RouteComponentProps } from 'react-router'
 import { config as VehicleFormConfig } from 'pages/vehicle/VehicleFormConfig'
 import TextInput from 'components/inputs/TextInput'
 
-export interface IVehicleFormProps extends RouteComponentProps<any> {}
+export interface IVehicleFormProps extends RouteComponentProps<any> { }
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -120,26 +120,26 @@ export default function VehicleForm(props: IVehicleFormProps) {
                         // disabled: setReadOnly(0),
                     })
                 ) : (
-                    <TextInput
-                        style={
-                            i % 2 === 0
-                                ? { width: 446, marginLeft: '64px' }
-                                : { width: 446, marginLeft: '28px' }
-                        }
-                        label={o.name}
-                        name={o.id}
-                        // onChange={handleChange}
-                        required={o.required}
-                        //@ts-ignore
-                        // value={currentVisitor[o.id]}
-                        InputProps={
-                            {
-                                // readOnly: setReadOnly(o),
+                        <TextInput
+                            style={
+                                i % 2 === 0
+                                    ? { width: 446, marginLeft: '64px' }
+                                    : { width: 446, marginLeft: '28px' }
                             }
-                        }
+                            label={o.name}
+                            name={o.id}
+                            // onChange={handleChange}
+                            required={o.required}
+                            //@ts-ignore
+                            // value={currentVisitor[o.id]}
+                            InputProps={
+                                {
+                                    // readOnly: setReadOnly(o),
+                                }
+                            }
                         // disabled={setReadOnly(o)}
-                    />
-                )}
+                        />
+                    )}
             </Grid>
         ))
 
@@ -176,26 +176,26 @@ export default function VehicleForm(props: IVehicleFormProps) {
                         // disabled: setReadOnly(0),
                     })
                 ) : (
-                    <TextInput
-                        style={
-                            i % 2 === 0
-                                ? { width: 446, marginLeft: '64px' }
-                                : { width: 446, marginLeft: '28px' }
-                        }
-                        label={o.name}
-                        name={o.id}
-                        // onChange={handleChange}
-                        required={o.required}
-                        //@ts-ignore
-                        // value={currentVisitor[o.id]}
-                        InputProps={
-                            {
-                                // readOnly: setReadOnly(o),
+                        <TextInput
+                            style={
+                                i % 2 === 0
+                                    ? { width: 446, marginLeft: '64px' }
+                                    : { width: 446, marginLeft: '28px' }
                             }
-                        }
+                            label={o.name}
+                            name={o.id}
+                            // onChange={handleChange}
+                            required={o.required}
+                            //@ts-ignore
+                            // value={currentVisitor[o.id]}
+                            InputProps={
+                                {
+                                    // readOnly: setReadOnly(o),
+                                }
+                            }
                         // disabled={setReadOnly(o)}
-                    />
-                )}
+                        />
+                    )}
             </Grid>
         ))
 
@@ -276,7 +276,7 @@ export default function VehicleForm(props: IVehicleFormProps) {
                                     value="Actions"
                                     width={147}
                                     style={{ height: '45px' }}
-                                    // menuOptions={selectInputMenu}
+                                // menuOptions={selectInputMenu}
                                 />
                                 <Box className={classes.button}>
                                     {/* {saveButtonActive &&  */}
@@ -315,18 +315,18 @@ export default function VehicleForm(props: IVehicleFormProps) {
                                             id="date-picker-inline"
                                             autoOk
                                             onError={console.log}
-                                            // onChange={(date) => {
-                                            //     debugger
-                                            //     dispatch(setCurrentVehicle({
-                                            //         ...currentVehicle,
-                                            //         intime: new Date(date).toString()
-                                            //     }))
-                                            // }}
-                                            // onChange={handleChange}
-                                            // InputProps={{
-                                            //     readOnly: setReadOnly({}),
-                                            // }}
-                                            // disabled={setReadOnly({})}
+                                        // onChange={(date) => {
+                                        //     debugger
+                                        //     dispatch(setCurrentVehicle({
+                                        //         ...currentVehicle,
+                                        //         intime: new Date(date).toString()
+                                        //     }))
+                                        // }}
+                                        // onChange={handleChange}
+                                        // InputProps={{
+                                        //     readOnly: setReadOnly({}),
+                                        // }}
+                                        // disabled={setReadOnly({})}
                                         />
                                     </Grid>
                                     <Grid item xs={6}>

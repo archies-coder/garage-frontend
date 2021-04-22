@@ -15,6 +15,7 @@ import {
     withStyles,
 } from '@material-ui/core'
 import { ExpandLess, ExpandMore, HomeSharp } from '@material-ui/icons'
+import ReceiptIcon from '@material-ui/icons/Receipt'
 import * as React from 'react'
 import { NavLink } from 'react-router-dom'
 
@@ -131,6 +132,11 @@ const mappableRoutes: MappableRoutesDictionary = {
         path: '/',
         icon: <HomeSharp className="white-text" />,
         name: 'Home',
+    },
+    Bills: {
+        path: '/bills',
+        icon: <ReceiptIcon className="white-text" />,
+        name: 'Bills',
     },
 }
 

@@ -97,7 +97,7 @@ const NavigationBar: FunctionComponent<Props> = (props) => {
                 </NavLink>
             </Link>
             <Link variant="h6" color="textSecondary">
-                <NavLink to="/bill" className={classes.navLink}>
+                <NavLink to="/bill-form" className={classes.navLink}>
                     {/* <PersonIcon />  */}
                     <span className={classes.navItem}>Bill</span>
                 </NavLink>
