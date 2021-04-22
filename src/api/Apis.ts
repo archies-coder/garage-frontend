@@ -49,7 +49,8 @@ export async function signUp(username: string, password: string, email: string, 
         JSON.stringify({
             "username": username,
             "password": password,
-            "name": name,
+            "email": email,
+            "mobile": mobile,
             "usertype": userType
         }), {
         headers: {
