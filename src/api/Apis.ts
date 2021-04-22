@@ -29,7 +29,7 @@ export const apis: AxiosInstance = axios.create({
 });
 
 export async function signIn(username: string, password: string) {
-    return await apis.post('/product/login', JSON.stringify({
+    return await apis.post('/login', JSON.stringify({
         "username": username,
         "password": password
     }), {

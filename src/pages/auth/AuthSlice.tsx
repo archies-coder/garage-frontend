@@ -4,39 +4,7 @@ import { getBackdropStart, getBackdropStop } from 'app/BackdropSlice';
 import { AppThunk } from 'app/store';
 // import { roles } from 'app/rolesConfig'
 import { startSnackbar } from 'app/SnackbarSlice';
-
-interface ISignInInputState {
-    username: string
-    password: string
-    rememberMe: boolean
-}
-interface IPasswordInputState {
-    newpass: string
-    confnewpass: string
-}
-interface IForgotPasswordInputState {
-    username: string
-}
-interface ISignUpInputState {
-    email: string
-    mobile: number
-    username: string
-    userType?: string
-    password: string
-}
-interface AuthState {
-    error: string | null
-    isLoading: boolean
-    token: string
-    userType: string
-    isLoggedIn: boolean
-    name: string
-    roles: any
-    currentSignInInput: ISignInInputState
-    currentSignUpInput: ISignUpInputState
-    currentPasswordInput: IPasswordInputState
-    currentForgotPasswordInput: IForgotPasswordInputState
-}
+import { ISignUpInputState, ISignInInputState, IPasswordInputState, IForgotPasswordInputState, AuthState, ISignInSuccessPayload } from './auth.interfaces';
 
 const InitialSignUpState: ISignUpInputState = {
     email: '',
@@ -44,7 +12,6 @@ const InitialSignUpState: ISignUpInputState = {
     username: '',
     userType: '',
     password: '',
-
 }
 
 const InitialSignInState: ISignInInputState = {
@@ -60,20 +27,18 @@ const InitialForgotPasswordState: IForgotPasswordInputState = {
     username: ''
 }
 
-
 const authInitialState: AuthState = {
     error: '',
     isLoading: false,
     token: '',
     userType: '',
     isLoggedIn: false,
-    name: '',
+    username: '',
     roles: {},
     currentSignInInput: InitialSignInState,
     currentSignUpInput: InitialSignUpState,
     currentPasswordInput: InitialPasswordState,
     currentForgotPasswordInput: InitialForgotPasswordState
-
 }
 
 function startLoading(state: AuthState) {
@@ -92,37 +57,38 @@ const AuthSlice = createSlice({
             if (localStorage.token) state.isLoggedIn = true
         },
         setAuthUser(state: AuthState, { payload }: PayloadAction<any>) {
-            const { token, userType, name } = payload
+            const { token, userType, username } = payload
             if (token) {
                 state.token = token
                 localStorage.setItem('token', token)
                 state.isLoggedIn = true
                 state.userType = userType
-                state.name = name
+                state.username = username
                 //@ts-ignore
                 state.roles = roles[userType]
             }
         },
-        getSignInSuccess(state: AuthState, { payload }: PayloadAction<any>) {
+        getSignInSuccess(state: AuthState, { payload }: PayloadAction<ISignInSuccessPayload>) {
             // console.log(payload)
-            const { token, usertype, name } = payload.data
+            const { token, userType, username } = payload.data
+            debugger
             if (token) {
                 state.token = token
                 localStorage.setItem('token', token)
                 state.isLoggedIn = true
-                state.userType = usertype
-                state.name = name
+                state.userType = userType
+                state.username = username
                 //@ts-ignore
-                state.roles = roles[usertype]
+                // state.roles = roles[userType]
                 sessionStorage.setItem('authUser', JSON.stringify({
                     "token": token,
-                    "userType": usertype,
-                    "name": name
+                    "userType": userType,
+                    "username": username
                 }));
                 if (state.currentSignInInput.rememberMe) localStorage.setItem('authUser', JSON.stringify({
                     "token": token,
-                    "userType": usertype,
-                    "name": name
+                    "userType": userType,
+                    "username": username
                 }));
             }
         },
