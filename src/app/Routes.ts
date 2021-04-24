@@ -18,17 +18,17 @@ const Routes = [
         exact: true,
         component: HomeView,
     },
-    {
-        path: '/signin',
-        component: SignIn
-    },
-    {
-        path: '/signup',
-        component: SignUp
-    },
+    // {
+    //     path: '/signin',
+    //     component: SignIn
+    // },
+    // {
+    //     path: '/signup',
+    //     component: SignUp
+    // },
     {
         path: '/forgotpassword',
-        component: ForgotPassword
+        component: ForgotPassword,
     },
     {
         path: '/vehicle',
