@@ -65,7 +65,7 @@ const AuthSlice = createSlice({
                 state.userType = userType
                 state.username = username
                 //@ts-ignore
-                state.roles = roles[userType]
+                // state.roles = roles[userType]
             }
         },
         getSignInSuccess(state: AuthState, { payload }: PayloadAction<ISignInSuccessPayload>) {

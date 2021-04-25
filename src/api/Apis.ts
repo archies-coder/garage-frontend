@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios'
 
 export const serverUrl =
-    process.env.REACT_APP_SERVER_URL || 'http://localhost:8000'
+    process.env.REACT_APP_SERVER_URL || 'http://localhost:8000/garage/v1.0'
 
 let user = sessionStorage.getItem('authUser')
 
@@ -18,12 +18,12 @@ if (user) {
 //@ts-ignore
 const { token } = user
 
-export const apis: AxiosInstance = axios.create({
+export const apis = axios.create({
     baseURL: serverUrl,
     timeout: 10000,
     params: {
         //@ts-ignore
-        // token: token || '',
+        token: token || '',
     },
     //headers: {'X-Custom-Header': 'foobar'}
 })
@@ -31,16 +31,15 @@ export const apis: AxiosInstance = axios.create({
 export async function signIn(username: string, password: string) {
     return await apis
         .post(
-            '/garage/v1.0/login',
+            '/login',
             JSON.stringify({
                 username: username,
                 password: password,
             }),
             {
                 headers: {
-                    'Content-type': 'application/json',
+                    'Content-Type': 'application/json',
                 },
-                params: {},
             }
         )
         .then((res) => {
