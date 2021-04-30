@@ -60,7 +60,7 @@ interface IConfigObject {
     cellOptions?: ITableCellProps
     isLoading?: boolean
     pagination?: boolean
-    pageChange?: () => any
+    pageChange?: any
     totalCount?: number
 }
 

@@ -77,9 +77,11 @@ export default function SignIn(props: Props) {
     dispatch(doLogin(
       username,
       password,
-      () => dispatch(resetSignInInput())
+      () => {
+
+        props.history.push('/')
+      }
     ))
-    props.history.push('/')
   }
   return (
     <Container component="main" maxWidth="xs">

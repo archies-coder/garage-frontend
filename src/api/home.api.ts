@@ -9,6 +9,10 @@ interface IEntryResponse {
 
 type IVehicleEntriesResponse = IEntryResponse[]
 
-export async function getAllVehicleEntries() {
+export async function getAllVehicleEntries(
+    page = 0,
+    count = 0,
+    vehicle = ''
+): Promise<IVehicleEntriesResponse> {
     return await apiProvider.getAll<IVehicleEntriesResponse>(plural)
 }

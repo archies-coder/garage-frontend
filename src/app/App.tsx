@@ -1,8 +1,11 @@
 import {
+    Backdrop,
+    CircularProgress,
     Container,
     createStyles,
     Grid,
     makeStyles,
+    Snackbar,
     Theme,
 } from '@material-ui/core'
 import NavGridContainer from 'layouts/navbar/NavGridContainer'
@@ -16,6 +19,7 @@ import * as React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import Routes from './Routes'
+import { stopSnackbar } from './SnackbarSlice'
 import { RootState } from './store'
 
 interface Props {}
@@ -53,28 +57,43 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function App(props: Props) {
     const classes = useStyles()
 
-  const dispatch = useDispatch()
+    const dispatch = useDispatch()
 
-  const { isLoggedIn } = useSelector((state: RootState) => state.auth)
+    const { isLoggedIn } = useSelector((state: RootState) => state.auth)
+    const { open, vertical, horizontal, message } = useSelector(
+        (state: RootState) => state.snackbar
+    )
+    const { mask } = useSelector((state: RootState) => state.backdrop)
 
-  if (!isLoggedIn) {
-    // debugger
-    //localStorage.loginRedirect = rest.location.pathname
-    let user = sessionStorage.getItem('authUser');
+    if (!isLoggedIn) {
+        // debugger
+        //localStorage.loginRedirect = rest.location.pathname
+        let user = sessionStorage.getItem('authUser')
 
-    if (!user) user = localStorage.getItem('authUser')
+        if (!user) user = localStorage.getItem('authUser')
 
-    if (user) {
-      JSON.parse(user)
-      //outhUser(JSON.parse(user));
-      dispatch(setAuthUser(JSON.parse(user)))
-    } else {
-      //return <Redirect to="/signin" />
+        if (user) {
+            JSON.parse(user)
+            //outhUser(JSON.parse(user));
+            dispatch(setAuthUser(JSON.parse(user)))
+        } else {
+            //return <Redirect to="/signin" />
+        }
     }
-  }
 
     return (
         <Grid container className={classes.root}>
+            <Backdrop className={classes.backdrop} open={mask}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
+            <Snackbar
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                open={open}
+                autoHideDuration={5000}
+                onClose={() => dispatch(stopSnackbar())}
+                message={message}
+                key={vertical + horizontal}
+            />
             <Container maxWidth={'xl'} className={classes.root}>
                 <SidebarView />
                 <NavGridContainer>

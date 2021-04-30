@@ -8,15 +8,18 @@ import {
     Typography,
 } from '@material-ui/core'
 import { ArrowBackIos, CameraAlt } from '@material-ui/icons'
+import { RootState } from 'app/store'
 import CustomButton from 'components/inputs/Button'
 import DateTimeInput from 'components/inputs/DateTimeInput'
 import SelectInput from 'components/inputs/SelectInput'
-import * as React from 'react'
-import { RouteComponentProps } from 'react-router'
-import { config as VehicleFormConfig } from 'pages/vehicle/VehicleFormConfig'
 import TextInput from 'components/inputs/TextInput'
+import { postVehicleEntry, setCurrentVehicle } from 'pages/home/HomeSlice'
+import { config as VehicleFormConfig } from 'pages/vehicle/VehicleFormConfig'
+import * as React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { RouteComponentProps } from 'react-router'
 
-export interface IVehicleFormProps extends RouteComponentProps<any> { }
+export interface IVehicleFormProps extends RouteComponentProps<any> {}
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -87,11 +90,67 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function VehicleForm(props: IVehicleFormProps) {
     const classes = useStyles()
 
+    const dispatch = useDispatch()
+
+    React.useEffect(() => {
+        console.log('Hi')
+    }, [dispatch])
+
+    const { currentVehicle } = useSelector((state: RootState) => state.vehicles)
+
+    const handleSubmit = async (e: any) => {
+        e.preventDefault()
+        console.log(currentVehicle)
+        const {
+            vehicleno,
+            make,
+            model,
+            vehicleType,
+            name,
+            mobile,
+            city: address,
+            purpose,
+            intime,
+            remark,
+        } = currentVehicle
+        debugger
+        const data = {
+            vehicleno,
+            model,
+            make,
+            vehicleType,
+            name,
+            mobile,
+            address,
+            purpose,
+            intime,
+            remark,
+        }
+        dispatch(postVehicleEntry(data))
+    }
+
+    const handleChange = (e: any) => {
+        const name = e.target.name
+        const value = e.target.value
+        dispatch(
+            setCurrentVehicle({
+                ...currentVehicle,
+                [e.target.name]: e.target.value,
+            })
+        )
+        // if (name === "mobile") {
+        //     dispatch(doAutoPopulateVehicle('', value))
+        // }
+        // if (name === "email") {
+        //     dispatch(doAutoPopulateVehicle(value, ''))
+        // }
+    }
+
     const vehicleSectionFields = VehicleFormConfig.filter(
         (i) => i.section === 'VI'
         // &&
-        // visitorConfigsById[i.id] &&
-        // visitorConfigsById[i.id].value
+        // VehicleConfigsById[i.id] &&
+        // VehicleConfigsById[i.id].value
     )
         .sort((a, b) => a.seq - b.seq)
         .map((o, i) => (
@@ -104,7 +163,7 @@ export default function VehicleForm(props: IVehicleFormProps) {
                 {/* {(o.render && o.render(notificationById[i], handleChange, i + "-" + o.key)) || obj[o.key]} */}
                 {/* <TextInput style={{ width: 446, marginLeft: '64px' }} label={o.name} name={o.id} onChange={handleChange}
                 //@ts-ignore
-                value={currentVisitor[o.id]} /> */}
+                value={currentVehicle[o.id]} /> */}
                 {o.component ? (
                     o.component({
                         // purpose: {
@@ -120,34 +179,34 @@ export default function VehicleForm(props: IVehicleFormProps) {
                         // disabled: setReadOnly(0),
                     })
                 ) : (
-                        <TextInput
-                            style={
-                                i % 2 === 0
-                                    ? { width: 446, marginLeft: '64px' }
-                                    : { width: 446, marginLeft: '28px' }
+                    <TextInput
+                        style={
+                            i % 2 === 0
+                                ? { width: 446, marginLeft: '64px' }
+                                : { width: 446, marginLeft: '28px' }
+                        }
+                        label={o.name}
+                        name={o.id}
+                        onChange={handleChange}
+                        required={o.required}
+                        //@ts-ignore
+                        value={currentVehicle[o.id]}
+                        InputProps={
+                            {
+                                // readOnly: setReadOnly(o),
                             }
-                            label={o.name}
-                            name={o.id}
-                            // onChange={handleChange}
-                            required={o.required}
-                            //@ts-ignore
-                            // value={currentVisitor[o.id]}
-                            InputProps={
-                                {
-                                    // readOnly: setReadOnly(o),
-                                }
-                            }
+                        }
                         // disabled={setReadOnly(o)}
-                        />
-                    )}
+                    />
+                )}
             </Grid>
         ))
 
     const ownerSectionFields = VehicleFormConfig.filter(
         (i) => i.section === 'OI'
         // &&
-        // visitorConfigsById[i.id] &&
-        // visitorConfigsById[i.id].value
+        // VehicleConfigsById[i.id] &&
+        // VehicleConfigsById[i.id].value
     )
         .sort((a, b) => a.seq - b.seq)
         .map((o, i) => (
@@ -160,7 +219,7 @@ export default function VehicleForm(props: IVehicleFormProps) {
                 {/* {(o.render && o.render(notificationById[i], handleChange, i + "-" + o.key)) || obj[o.key]} */}
                 {/* <TextInput style={{ width: 446, marginLeft: '64px' }} label={o.name} name={o.id} onChange={handleChange}
                 //@ts-ignore
-                value={currentVisitor[o.id]} /> */}
+                value={currentVehicle[o.id]} /> */}
                 {o.component ? (
                     o.component({
                         // purpose: {
@@ -176,35 +235,33 @@ export default function VehicleForm(props: IVehicleFormProps) {
                         // disabled: setReadOnly(0),
                     })
                 ) : (
-                        <TextInput
-                            style={
-                                i % 2 === 0
-                                    ? { width: 446, marginLeft: '64px' }
-                                    : { width: 446, marginLeft: '28px' }
+                    <TextInput
+                        style={
+                            i % 2 === 0
+                                ? { width: 446, marginLeft: '64px' }
+                                : { width: 446, marginLeft: '28px' }
+                        }
+                        label={o.name}
+                        name={o.id}
+                        onChange={handleChange}
+                        required={o.required}
+                        //@ts-ignore
+                        value={currentVehicle[o.id]}
+                        InputProps={
+                            {
+                                // readOnly: setReadOnly(o),
                             }
-                            label={o.name}
-                            name={o.id}
-                            // onChange={handleChange}
-                            required={o.required}
-                            //@ts-ignore
-                            // value={currentVisitor[o.id]}
-                            InputProps={
-                                {
-                                    // readOnly: setReadOnly(o),
-                                }
-                            }
+                        }
                         // disabled={setReadOnly(o)}
-                        />
-                    )}
+                    />
+                )}
             </Grid>
         ))
 
     return (
         <Grid item xs={12}>
             <Paper className={classes.paper}>
-                <form
-                // onSubmit={handleSubmit}
-                >
+                <form onSubmit={handleSubmit}>
                     <div className={classes.header}>
                         <ArrowBackIos
                             className={classes.arrowBack}
@@ -276,7 +333,7 @@ export default function VehicleForm(props: IVehicleFormProps) {
                                     value="Actions"
                                     width={147}
                                     style={{ height: '45px' }}
-                                // menuOptions={selectInputMenu}
+                                    // menuOptions={selectInputMenu}
                                 />
                                 <Box className={classes.button}>
                                     {/* {saveButtonActive &&  */}
@@ -315,18 +372,18 @@ export default function VehicleForm(props: IVehicleFormProps) {
                                             id="date-picker-inline"
                                             autoOk
                                             onError={console.log}
-                                        // onChange={(date) => {
-                                        //     debugger
-                                        //     dispatch(setCurrentVehicle({
-                                        //         ...currentVehicle,
-                                        //         intime: new Date(date).toString()
-                                        //     }))
-                                        // }}
-                                        // onChange={handleChange}
-                                        // InputProps={{
-                                        //     readOnly: setReadOnly({}),
-                                        // }}
-                                        // disabled={setReadOnly({})}
+                                            // onChange={(date) => {
+                                            //     debugger
+                                            //     dispatch(setCurrentVehicle({
+                                            //         ...currentVehicle,
+                                            //         intime: new Date(date).toString()
+                                            //     }))
+                                            // }}
+                                            // onChange={handleChange}
+                                            // InputProps={{
+                                            //     readOnly: setReadOnly({}),
+                                            // }}
+                                            // disabled={setReadOnly({})}
                                         />
                                     </Grid>
                                     <Grid item xs={6}>

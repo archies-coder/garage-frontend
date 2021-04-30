@@ -30,28 +30,28 @@ async function getAll<T = void>(
     return await axios.get(url).then(handleResponse).catch(handleError)
 }
 
-async function getSingle(resource: string, id: string) {
+async function getSingle<T = void>(resource: string, id: string): Promise<T> {
     return await axios
         .get(`${BASE_URL}/${resource}/${id}`)
         .then(handleResponse)
         .catch(handleError)
 }
 
-async function post(resource: string, model: string) {
+async function post(resource: string, model: any) {
     return await axios
         .post(`${BASE_URL}/${resource}`, model)
         .then(handleResponse)
         .catch(handleError)
 }
 
-async function put(resource: string, model: object) {
+async function put(resource: string, model: string) {
     return await axios
         .put(`${BASE_URL}/${resource}`, model)
         .then(handleResponse)
         .catch(handleError)
 }
 
-async function patch(resource: string, model: object) {
+async function patch(resource: string, model: string) {
     return await axios
         .patch(`${BASE_URL}/${resource}`, model)
         .then(handleResponse)
