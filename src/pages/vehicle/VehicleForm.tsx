@@ -13,7 +13,11 @@ import CustomButton from 'components/inputs/Button'
 import DateTimeInput from 'components/inputs/DateTimeInput'
 import SelectInput from 'components/inputs/SelectInput'
 import TextInput from 'components/inputs/TextInput'
-import { postVehicleEntry, setCurrentVehicle } from 'pages/home/HomeSlice'
+import {
+    fetchAllVehicles,
+    postVehicleEntry,
+    setCurrentVehicleEntry,
+} from 'pages/home/HomeSlice'
 import { config as VehicleFormConfig } from 'pages/vehicle/VehicleFormConfig'
 import * as React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -93,16 +97,20 @@ export default function VehicleForm(props: IVehicleFormProps) {
     const dispatch = useDispatch()
 
     React.useEffect(() => {
-        console.log('Hi')
+        dispatch(fetchAllVehicles())
     }, [dispatch])
 
-    const { currentVehicle } = useSelector((state: RootState) => state.vehicles)
+    const { currentVehicleEntry, VehiclesByVehicleNo } = useSelector(
+        (state: RootState) => state.VehicleEntries
+    )
+
+    const { vehicleNo } = currentVehicleEntry
 
     const handleSubmit = async (e: any) => {
         e.preventDefault()
-        console.log(currentVehicle)
+        console.log(currentVehicleEntry)
         const {
-            vehicleno,
+            vehicleNo,
             make,
             model,
             vehicleType,
@@ -112,10 +120,9 @@ export default function VehicleForm(props: IVehicleFormProps) {
             purpose,
             intime,
             remark,
-        } = currentVehicle
-        debugger
+        } = currentVehicleEntry
         const data = {
-            vehicleno,
+            vehicleNo,
             model,
             make,
             vehicleType,
@@ -129,12 +136,35 @@ export default function VehicleForm(props: IVehicleFormProps) {
         dispatch(postVehicleEntry(data))
     }
 
+    const handleVehivcleNoAutoComplete = (obj: any) => {
+        if (Object.keys(VehiclesByVehicleNo).includes(obj.vehicleNo)) {
+            const ExistingVehicle = VehiclesByVehicleNo[obj.vehicleNo]
+            const { vehicleMake, vehicleModel, vehicleType } = ExistingVehicle
+            dispatch(
+                setCurrentVehicleEntry({
+                    ...currentVehicleEntry,
+                    ...obj,
+                    make: vehicleMake,
+                    model: vehicleModel,
+                    vehicleType: vehicleType,
+                })
+            )
+        } else {
+            dispatch(
+                setCurrentVehicleEntry({
+                    ...currentVehicleEntry,
+                    ...obj,
+                })
+            )
+        }
+    }
+
     const handleChange = (e: any) => {
         const name = e.target.name
         const value = e.target.value
         dispatch(
-            setCurrentVehicle({
-                ...currentVehicle,
+            setCurrentVehicleEntry({
+                ...currentVehicleEntry,
                 [e.target.name]: e.target.value,
             })
         )
@@ -146,7 +176,7 @@ export default function VehicleForm(props: IVehicleFormProps) {
         // }
     }
 
-    const vehicleSectionFields = VehicleFormConfig.filter(
+    const VehicleEntriesectionFields = VehicleFormConfig.filter(
         (i) => i.section === 'VI'
         // &&
         // VehicleConfigsById[i.id] &&
@@ -163,7 +193,7 @@ export default function VehicleForm(props: IVehicleFormProps) {
                 {/* {(o.render && o.render(notificationById[i], handleChange, i + "-" + o.key)) || obj[o.key]} */}
                 {/* <TextInput style={{ width: 446, marginLeft: '64px' }} label={o.name} name={o.id} onChange={handleChange}
                 //@ts-ignore
-                value={currentVehicle[o.id]} /> */}
+                value={currentVehicleEntry[o.id]} /> */}
                 {o.component ? (
                     o.component({
                         // purpose: {
@@ -171,6 +201,11 @@ export default function VehicleForm(props: IVehicleFormProps) {
                         //     onChange: handleAutoComplete,
                         //     value: purpose,
                         // },
+                        vehicles: {
+                            options: Object.keys(VehiclesByVehicleNo),
+                            onChange: handleVehivcleNoAutoComplete,
+                            value: vehicleNo,
+                        },
 
                         style: {
                             width: 446,
@@ -190,7 +225,7 @@ export default function VehicleForm(props: IVehicleFormProps) {
                         onChange={handleChange}
                         required={o.required}
                         //@ts-ignore
-                        value={currentVehicle[o.id]}
+                        value={currentVehicleEntry[o.id]}
                         InputProps={
                             {
                                 // readOnly: setReadOnly(o),
@@ -219,7 +254,7 @@ export default function VehicleForm(props: IVehicleFormProps) {
                 {/* {(o.render && o.render(notificationById[i], handleChange, i + "-" + o.key)) || obj[o.key]} */}
                 {/* <TextInput style={{ width: 446, marginLeft: '64px' }} label={o.name} name={o.id} onChange={handleChange}
                 //@ts-ignore
-                value={currentVehicle[o.id]} /> */}
+                value={currentVehicleEntry[o.id]} /> */}
                 {o.component ? (
                     o.component({
                         // purpose: {
@@ -246,7 +281,7 @@ export default function VehicleForm(props: IVehicleFormProps) {
                         onChange={handleChange}
                         required={o.required}
                         //@ts-ignore
-                        value={currentVehicle[o.id]}
+                        value={currentVehicleEntry[o.id]}
                         InputProps={
                             {
                                 // readOnly: setReadOnly(o),
@@ -374,8 +409,8 @@ export default function VehicleForm(props: IVehicleFormProps) {
                                             onError={console.log}
                                             // onChange={(date) => {
                                             //     debugger
-                                            //     dispatch(setCurrentVehicle({
-                                            //         ...currentVehicle,
+                                            //     dispatch(setCurrentVehicleEntry({
+                                            //         ...currentVehicleEntry,
                                             //         intime: new Date(date).toString()
                                             //     }))
                                             // }}
@@ -402,8 +437,8 @@ export default function VehicleForm(props: IVehicleFormProps) {
                                             onError={console.log}
                                             // onChange={(date) => {
                                             //     debugger
-                                            //     dispatch(setCurrentVehicle({
-                                            //         ...currentVehicle,
+                                            //     dispatch(setCurrentVehicleEntry({
+                                            //         ...currentVehicleEntry,
                                             //         outime: new Date(date).toString()
                                             //     }))
                                             // }}
@@ -419,7 +454,7 @@ export default function VehicleForm(props: IVehicleFormProps) {
                             </div>
                         </Grid>
                         <Grid item xs={6}></Grid>
-                        {vehicleSectionFields}
+                        {VehicleEntriesectionFields}
                     </Grid>
                     <Grid container style={{ width: '1020px' }}>
                         <Grid item xs={6}>

@@ -17,7 +17,7 @@ import TableWrapper from 'components/TableWrapper'
 import * as React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import HomeDateDropdown from './HomeDateDropdown'
-import { disableSaveButton, fetchVehicles } from './HomeSlice'
+import { disableSaveButton, fetchVehicleEntries } from './HomeSlice'
 import HomeStats from './HomeStats'
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -103,7 +103,7 @@ const columns = [
         label: 'Check-in Id',
     },
     {
-        id: 'vehicleId[\'vehicleNo\']',
+        id: "vehicleId['vehicleNo']",
         label: 'Vehicle Number',
     },
     {
@@ -133,7 +133,7 @@ const homeStatsConfig = {
     in_garage: 0,
     parts_used: 0,
     total_customers: 0,
-    vehicleStats: 0,
+    VehicleEntriestats: 0,
     isLoadingHomeStats: 0,
 }
 
@@ -144,16 +144,16 @@ const HomeView: React.FC<Props> = (props) => {
 
     React.useEffect(() => {
         // dispatch(fetchVisitors(0, 10))
-        dispatch(fetchVehicles())
+        dispatch(fetchVehicleEntries())
         // dispatch(fetchHomeStats())
     }, [dispatch])
 
     const {
-        Vehicles: vehicleEntries,
+        VehicleEntries: vehicleEntries,
         isLoading: isLoadingVehicleEntries,
         pageCount,
         pageLinks,
-    } = useSelector((state: RootState) => state.vehicles)
+    } = useSelector((state: RootState) => state.VehicleEntries)
 
     const handleCheckOut = () => {
         console.log('Check out')
@@ -229,7 +229,7 @@ const HomeView: React.FC<Props> = (props) => {
                             <Grid item md={4}>
                                 <div className={classes.graph}>
                                     <MyChart2
-                                        vehicleStats={[0, 15, 45, 5, 10]}
+                                        VehicleEntriestats={[0, 15, 45, 5, 10]}
                                     ></MyChart2>
                                 </div>
                             </Grid>

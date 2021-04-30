@@ -1,15 +1,18 @@
 import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit'
-import { getAllVehicleEntries } from 'api/vehicleEntry.api'
+import { getAllVehicles } from 'api/vehicle.api'
+import {
+    createNewVehicleEntry,
+    getAllVehicleEntries,
+} from 'api/vehicleEntry.api'
 import { getBackdropStart, getBackdropStop } from 'app/BackdropSlice'
 import { startSnackbar } from 'app/SnackbarSlice'
 import { AppThunk } from 'app/store'
 import { Links } from 'parse-link-header'
-import { createNewVehicleEntry } from 'api/vehicleEntry.api'
 
 export interface VehicleInfo {
     make: string
     model: string
-    vehicleno: string
+    vehicleNo: string
     name: string
     purpose: string
     remark: string
@@ -30,17 +33,19 @@ export const defaultVehicle: VehicleInfo = {
     outime: '',
     purpose: '',
     remark: '',
-    vehicleno: '',
+    vehicleNo: '',
     make: '',
     model: '',
     vehicleType: '',
 }
 
-interface VehicleState {
-    Vehicles: VehicleInfo[]
-    VehiclesById: any
-    currentVehicle: VehicleInfo
-    currentPageVehicles: number[]
+interface VehicleEntriestate {
+    VehicleEntries: VehicleInfo[]
+    vehicles: any[]
+    VehiclesByVehicleNo: any
+    VehicleEntriesById: any
+    currentVehicleEntry: VehicleInfo
+    currentPageVehicleEntries: number[]
     pageCount: number
     pageLinks: Links | null
     isLoading: boolean
@@ -48,11 +53,13 @@ interface VehicleState {
     saveButtonActive: boolean
 }
 
-const VehiclesInitialState: VehicleState = {
-    Vehicles: [],
-    VehiclesById: {},
-    currentVehicle: defaultVehicle,
-    currentPageVehicles: [],
+const VehicleEntriesInitialState: VehicleEntriestate = {
+    VehicleEntries: [],
+    vehicles: [],
+    VehiclesByVehicleNo: {},
+    VehicleEntriesById: {},
+    currentVehicleEntry: defaultVehicle,
+    currentPageVehicleEntries: [],
     pageCount: 0,
     pageLinks: {},
     isLoading: false,
@@ -61,40 +68,50 @@ const VehiclesInitialState: VehicleState = {
     saveButtonActive: false,
 }
 
-function startLoading(state: VehicleState) {
+function startLoading(state: VehicleEntriestate) {
     state.isLoading = true
 }
 
-function loadingFailed(state: VehicleState, action: PayloadAction<string>) {
+function loadingFailed(
+    state: VehicleEntriestate,
+    action: PayloadAction<string>
+) {
     state.isLoading = false
     state.error = action.payload
 }
 
-const Vehicles = createSlice({
-    name: 'Vehicles',
-    initialState: VehiclesInitialState,
+const VehicleEntries = createSlice({
+    name: 'VehicleEntries',
+    initialState: VehicleEntriesInitialState,
     reducers: {
-        disableSaveButton(state: VehicleState) {
+        disableSaveButton(state: VehicleEntriestate) {
             state.saveButtonActive = false
         },
-        enableSaveButton(state: VehicleState) {
+        enableSaveButton(state: VehicleEntriestate) {
             state.saveButtonActive = true
         },
-        getVehiclesStart: startLoading,
-        getVehiclesSuccess(state, { payload }) {
-            const { pageCount, Vehicles } = payload
+        getVehiclesSuccess(state: VehicleEntriestate, { payload }) {
+            state.vehicles = payload.data
+            state.vehicles.map(
+                (vehicle) =>
+                    (state.VehiclesByVehicleNo[vehicle.vehicleNo] = vehicle)
+            )
+        },
+        getVehicleEntriesStart: startLoading,
+        getVehicleEntriesSuccess(state, { payload }) {
+            const { pageCount, VehicleEntries } = payload
             state.pageCount = pageCount
             state.isLoading = false
             state.error = null
-            state.Vehicles = Vehicles
+            state.VehicleEntries = VehicleEntries
             // @ts-ignore
-            state.Vehicles.map(
-                (vehicle) => (state.VehiclesById[vehicle._id] = vehicle)
+            state.VehicleEntries.map(
+                (vehicle) => (state.VehicleEntriesById[vehicle._id] = vehicle)
             )
-            //state.VehiclesById = state.Vehicles.map(vehicle => ({ ...vehicle, id: vehicle.id }))
+            //state.VehicleEntriesById = state.VehicleEntries.map(vehicle => ({ ...vehicle, id: vehicle.id }))
         },
-        getVehiclesFailure: loadingFailed,
-        setCurrentVehicle(state, { payload }: PayloadAction<any>) {
+        getVehicleEntriesFailure: loadingFailed,
+        setCurrentVehicleEntry(state, { payload }: PayloadAction<any>) {
             // const { _id, vehicleId, intime, purpose, remark } = payload
             // const {
             //     vehicleMake,
@@ -102,15 +119,15 @@ const Vehicles = createSlice({
             //     vehicleType,
             //     vehicleNo,
             // } = vehicleId
-            // state.currentVehicle._id = _id
-            // state.currentVehicle.make = vehicleMake
-            // state.currentVehicle.model = vehicleModel
-            // state.currentVehicle.vehicleType = vehicleType
-            // state.currentVehicle.vehicleno = vehicleNo
-            // state.currentVehicle.intime = intime
-            // state.currentVehicle.purpose = purpose
-            // state.currentVehicle.remark = remark
-            state.currentVehicle = payload
+            // state.currentVehicleEntry._id = _id
+            // state.currentVehicleEntry.make = vehicleMake
+            // state.currentVehicleEntry.model = vehicleModel
+            // state.currentVehicleEntry.vehicleType = vehicleType
+            // state.currentVehicleEntry.vehicleNo = vehicleNo
+            // state.currentVehicleEntry.intime = intime
+            // state.currentVehicleEntry.purpose = purpose
+            // state.currentVehicleEntry.remark = remark
+            state.currentVehicleEntry = payload
         },
         // setFilter(state, { payload }: PayloadAction<any>) {
         //     state.filter = { ...state.filter, ...payload }
@@ -121,41 +138,57 @@ const Vehicles = createSlice({
 export const {
     disableSaveButton,
     enableSaveButton,
-    getVehiclesStart,
+    getVehicleEntriesStart,
     getVehiclesSuccess,
-    getVehiclesFailure,
-    setCurrentVehicle,
+    getVehicleEntriesSuccess,
+    getVehicleEntriesFailure,
+    setCurrentVehicleEntry,
     // setFilter,
-} = Vehicles.actions
+} = VehicleEntries.actions
 
-export default Vehicles.reducer
+export default VehicleEntries.reducer
 
 export const doAutoPopulateVehicle = (vehicleNo: string): AppThunk => async (
     dispatch
 ) => {
     try {
-        const { data: vehicles, totalCount } = await getAllVehicleEntries(
+        const { data: VehicleEntries, totalCount } = await getAllVehicleEntries(
             null,
             null,
             vehicleNo
         )
-        vehicles.length > 0 && dispatch(setCurrentVehicle(vehicles[0]))
+        VehicleEntries.length > 0 &&
+            dispatch(setCurrentVehicleEntry(VehicleEntries[0]))
     } catch (err) {
         console.log(err)
     }
 }
 
-export const fetchVehicleById = (id?: any): AppThunk => async (dispatch) => {
+export const fetchAllVehicles = (): AppThunk => async (dispatch) => {
+    dispatch(getBackdropStart())
     try {
-        dispatch(getVehiclesStart())
-        const Vehicles = await getAllVehicleEntries()
-        dispatch(getVehiclesSuccess(Vehicles))
-    } catch (err) {
-        dispatch(getVehiclesFailure(err.toString()))
+        const response = await getAllVehicles()
+        dispatch(getVehiclesSuccess(response))
+        dispatch(getBackdropStop())
+    } catch (error) {
+        dispatch(getBackdropStop())
+        console.log(error)
     }
 }
 
-export const fetchVehicles = (
+export const fetchVehicleEntrById = (id?: any): AppThunk => async (
+    dispatch
+) => {
+    try {
+        dispatch(getVehicleEntriesStart())
+        const VehicleEntries = await getAllVehicleEntries()
+        dispatch(getVehicleEntriesSuccess(VehicleEntries))
+    } catch (err) {
+        dispatch(getVehicleEntriesFailure(err.toString()))
+    }
+}
+
+export const fetchVehicleEntries = (
     page?: number,
     count?: number,
     vehicle?: string,
@@ -164,15 +197,20 @@ export const fetchVehicles = (
 ): AppThunk => async (dispatch) => {
     try {
         // dispatch(fetchSites())
-        dispatch(getVehiclesStart())
+        dispatch(getVehicleEntriesStart())
         const { data, totalCount } = await getAllVehicleEntries(
             page,
             count,
             vehicle
         )
-        dispatch(getVehiclesSuccess({ pageCount: totalCount, Vehicles: data }))
+        dispatch(
+            getVehicleEntriesSuccess({
+                pageCount: totalCount,
+                VehicleEntries: data,
+            })
+        )
     } catch (err) {
-        dispatch(getVehiclesFailure(err.toString()))
+        dispatch(getVehicleEntriesFailure(err.toString()))
     }
 }
 
@@ -180,10 +218,8 @@ export const postVehicleEntry = (
     vehicle: any,
     callback?: any
 ): AppThunk => async (dispatch: Dispatch<any>) => {
-    debugger
     dispatch(getBackdropStart())
     try {
-        debugger
         await createNewVehicleEntry(vehicle)
         callback && callback()
         dispatch(getBackdropStop())
@@ -198,7 +234,7 @@ export const postVehicleEntry = (
     }
 }
 
-// export const fetchInOfficeVehicles = (
+// export const fetchInOfficeVehicleEntries = (
 //     page?: number,
 //     count?: number,
 //     vehicle?: string,
@@ -206,19 +242,19 @@ export const postVehicleEntry = (
 //     site?: string
 // ): AppThunk => async (dispatch) => {
 //     try {
-//         dispatch(getVehiclesStart())
-//         const Vehicles = await getInOfficeVehicleData(
+//         dispatch(getVehicleEntriesStart())
+//         const VehicleEntries = await getInOfficeVehicleData(
 //             page,
 //             count,
 //             vehicle,
 //             purpose,
 //             site
 //         )
-//         dispatch(getVehiclesSuccess(Vehicles))
+//         dispatch(getVehicleEntriesSuccess(VehicleEntries))
 
 //         const pur = await getPurpose()
 //         dispatch(getPurposeSuccess(pur))
 //     } catch (err) {
-//         dispatch(getVehiclesFailure(err.toString()))
+//         dispatch(getVehicleEntriesFailure(err.toString()))
 //     }
 // }

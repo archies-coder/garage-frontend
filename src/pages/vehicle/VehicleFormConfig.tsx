@@ -60,10 +60,24 @@ export const config: IVehicleFormConfig[] = [
 
     {
         name: 'Vehicle Number',
-        id: 'vehicleno',
+        id: 'vehicleNo',
         section: 'VI',
-        seq: 3,
-        required: true,
+        seq: 0,
+        component: ({ vehicles, style }: any) => (
+            <CustomAutoComplete
+                style={style}
+                required
+                options={vehicles.options}
+                label="Vehicle Number"
+                name="vehicleNo"
+                onChange={(value: any) =>
+                    vehicles.onChange({
+                        vehicleNo: value,
+                    })
+                }
+                value={vehicles.value}
+            />
+        ),
     },
     //  {
     //     name: 'No. Of visitors',

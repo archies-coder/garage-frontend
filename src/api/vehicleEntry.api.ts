@@ -40,7 +40,7 @@ export async function getVehicleById(vehicleNo: string): Promise<IVehicle> {
 
 export async function createNewVehicleEntry(vehicle: any): Promise<any> {
     const {
-        vehicleno,
+        vehicleNo,
         model,
         make,
         vehicleType,
@@ -52,7 +52,7 @@ export async function createNewVehicleEntry(vehicle: any): Promise<any> {
         remark,
     } = vehicle
     return await apiProvider.post('checkin', {
-        vehicleNo: vehicleno,
+        vehicleNo: vehicleNo,
         vehicleModel: model,
         vehicleMake: make,
         vehicleType: vehicleType,

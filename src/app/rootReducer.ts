@@ -12,7 +12,7 @@ const rootReducer = combineReducers({
     auth: AuthReducer,
     backdrop: BackdropReducer,
     snackbar: SnackbarReducer,
-    vehicles: VehicleReducer,
+    VehicleEntries: VehicleReducer,
 })
 
 // export type RootState = ReturnType<typeof rootReducer>
