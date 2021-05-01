@@ -19,6 +19,12 @@ import {
     withStyles,
 } from '@material-ui/core'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
+import {
+    KeyboardArrowLeft,
+    KeyboardArrowRight,
+    LastPage as LastPageIcon,
+    FirstPage as FirstPageIcon,
+} from '@material-ui/icons'
 // import {
 //     FirstPage as FirstPageIcon,
 //     KeyboardArrowLeft,
@@ -26,7 +32,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles'
 //     LastPage as LastPageIcon
 // } from "@material-ui/icons";
 // import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-// import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import { Skeleton } from '@material-ui/lab'
 import React, { FunctionComponent, useState } from 'react'
 
@@ -113,21 +119,33 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
                 disabled={page === 0}
                 aria-label="first page"
             >
-                {/* {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />} */}
+                {theme.direction === 'rtl' ? (
+                    <LastPageIcon />
+                ) : (
+                    <FirstPageIcon />
+                )}
             </IconButton>
             <IconButton
                 onClick={handleBackButtonClick}
                 disabled={page === 0}
                 aria-label="previous page"
             >
-                {/* {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />} */}
+                {theme.direction === 'rtl' ? (
+                    <KeyboardArrowRight />
+                ) : (
+                    <KeyboardArrowLeft />
+                )}
             </IconButton>
             <IconButton
                 onClick={handleNextButtonClick}
                 disabled={page >= Math.ceil(count / rowsPerPage) - 1}
                 aria-label="next page"
             >
-                {/* {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />} */}
+                {theme.direction === 'rtl' ? (
+                    <KeyboardArrowLeft />
+                ) : (
+                    <KeyboardArrowRight />
+                )}
             </IconButton>
             <IconButton
                 onClick={handleLastPageButtonClick}
@@ -446,7 +464,7 @@ export const TableWrapper: FunctionComponent<Props> = ({
                                     handleClick(e, i + '-c')
                                 }}
                             >
-                                {/* <MoreHorizIcon /> */}
+                                <MoreHorizIcon />
                             </Button>
                             <StyledMenu
                                 id={'simple-menu-' + i + row['id']}

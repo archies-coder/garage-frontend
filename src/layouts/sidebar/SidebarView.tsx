@@ -139,7 +139,7 @@ const mappableRoutes: MappableRoutesDictionary = {
         icon: <ReceiptIcon className="white-text" />,
         name: 'Bills',
     },
-    SpareParts: {
+    'Spare Parts': {
         path: '/spare-parts',
         icon: <BuildIcon className="white-text" />,
         name: 'Spare Parts',

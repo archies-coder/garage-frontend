@@ -6,6 +6,7 @@ import BackdropReducer from './BackdropSlice'
 import SnackbarReducer from './SnackbarSlice'
 import VehicleReducer from 'pages/home/HomeSlice'
 import SparePartReducer from 'pages/spare-part/SparePartSlice'
+import BillReducer from 'pages/bill/BillSlice'
 
 const rootReducer = combineReducers({
     // dummy: dummyReducer
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
     snackbar: SnackbarReducer,
     VehicleEntries: VehicleReducer,
     spareParts: SparePartReducer,
+    bills: BillReducer,
 })
 
 // export type RootState = ReturnType<typeof rootReducer>
