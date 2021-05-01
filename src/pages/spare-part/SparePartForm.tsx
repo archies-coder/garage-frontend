@@ -168,13 +168,16 @@ const SparePartForm: FunctionComponent<Props> = (props) => {
     useEffect(() => {
         const { name, brand, category } = filter
         let filtered = spareParts
-        if (name !== '') {
+        if (name !== '' && spareParts.map((p) => p.name).includes(name)) {
             filtered = filtered.filter((p) => p.name === name)
         }
-        if (brand !== '') {
+        if (brand !== '' && spareParts.map((p) => p.brand).includes(brand)) {
             filtered = filtered.filter((p) => p.brand === brand)
         }
-        if (category !== '') {
+        if (
+            category !== '' &&
+            spareParts.map((p) => p.category).includes(category)
+        ) {
             filtered = filtered.filter((p) => p.category === category)
         }
         if (filtered.length === 1) {
@@ -276,6 +279,7 @@ const SparePartForm: FunctionComponent<Props> = (props) => {
                                 value={brand}
                             />
                             <TextInput
+                                type="number"
                                 required
                                 label="Quantity"
                                 onChange={handleChange}
