@@ -103,11 +103,15 @@ const columns = [
         label: 'Check-in Id',
     },
     {
-        id: "vehicleId['vehicleNo']",
+        id: 'vehicleNo',
         label: 'Vehicle Number',
     },
     {
-        id: 'mobile',
+        id: 'customerName',
+        label: 'Name',
+    },
+    {
+        id: 'customerMobile',
         label: 'Mobile No',
     },
     {

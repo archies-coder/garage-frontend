@@ -1,9 +1,9 @@
 import ForgotPassword from 'pages/auth/ForgotPassword'
-import SignIn from 'pages/auth/SignIn'
-import SignUp from 'pages/auth/SignUp'
 import BillForm from 'pages/bill/BillForm'
 import BillView from 'pages/bill/BillView'
 import HomeView from 'pages/home/HomeView'
+import SparePartForm from 'pages/spare-part/SparePartForm'
+import SparePartView from 'pages/spare-part/SparePartView'
 import VehicleForm from 'pages/vehicle/VehicleForm'
 
 export interface IRoute {
@@ -22,10 +22,14 @@ const Routes = [
     //     path: '/signin',
     //     component: SignIn
     // },
-    // {
-    //     path: '/signup',
-    //     component: SignUp
-    // },
+    {
+        path: '/spare-parts/add',
+        component: SparePartForm,
+    },
+    {
+        path: '/spare-parts',
+        component: SparePartView,
+    },
     {
         path: '/forgotpassword',
         component: ForgotPassword,
