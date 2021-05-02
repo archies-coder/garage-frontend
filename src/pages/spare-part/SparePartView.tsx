@@ -51,6 +51,7 @@ const columns = [
     {
         id: 'updatedAt',
         label: 'Updated on',
+        isDate: true,
     },
 ]
 

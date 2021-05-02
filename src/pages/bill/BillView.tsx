@@ -1,15 +1,17 @@
 import { Box, createStyles, Grid, Paper, Theme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { ArrowBackIos } from '@material-ui/icons'
 import { RootState } from 'app/store'
 import { CustomMenuItem } from 'components/CustomMenuItem'
 import CustomButton from 'components/inputs/Button'
 import SearchInput from 'components/inputs/SearchInput'
 import React, { FunctionComponent, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { RouteComponentProps } from 'react-router'
 import TableWrapper from '../../components/TableWrapper'
 import { fetchBills } from './BillSlice'
 
-interface OwnProps {}
+interface OwnProps extends RouteComponentProps<any> {}
 
 type Props = OwnProps
 
@@ -20,6 +22,17 @@ const useStyles = makeStyles((theme: Theme) =>
             borderRadius: theme.shape.borderRadius - 5,
             // marginRight: 30,
             paddingRight: 150,
+        },
+        header: {
+            fontSize: '20px',
+            fontWeight: 'bold',
+            padding: theme.spacing(2, 0, 0, 4),
+            color: theme.palette.text.primary,
+        },
+        arrowBack: {
+            height: '16px',
+            // verticalAlign: 'bottom',
+            cursor: 'pointer',
         },
     })
 )
@@ -47,10 +60,12 @@ const columns = [
     {
         id: 'createdAt',
         label: 'Created On',
+        isDate: true,
     },
     {
         id: 'updatedAt',
         label: 'Updated on',
+        isDate: true,
     },
 ]
 
@@ -108,7 +123,7 @@ const BillView: FunctionComponent<Props> = (props) => {
     return (
         <Grid item xs={12} style={{ marginRight: '30px' }}>
             <Paper className={classes.paper}>
-                <Box
+                {/* <Box
                     display="flex"
                     justifyContent="space-between"
                     style={{ paddingTop: '38px', paddingBottom: '26px' }}
@@ -120,7 +135,7 @@ const BillView: FunctionComponent<Props> = (props) => {
                         style={{ paddingLeft: '30px' }}
                     />
                     <div style={{ width: 353 }} />
-                    {/* <SelectInput value="Action" menuOptions={selectInputMenu} style={{ width: '122px' }} /> */}
+                    {/* <SelectInput value="Action" menuOptions={selectInputMenu} style={{ width: '122px' }} />
                     <CustomMenuItem to="/bills/add">
                         <CustomButton
                             style={{
@@ -133,8 +148,14 @@ const BillView: FunctionComponent<Props> = (props) => {
                             Add Bill
                         </CustomButton>
                     </CustomMenuItem>
-                </Box>
-
+                </Box> */}
+                <div className={classes.header}>
+                    <ArrowBackIos
+                        className={classes.arrowBack}
+                        onClick={() => props.history.push('/')}
+                    />
+                    <span> Bills </span>
+                </div>
                 <TableWrapper
                     config={TableConfig}
                     style={{ width: '870px', paddingLeft: '60px' }}

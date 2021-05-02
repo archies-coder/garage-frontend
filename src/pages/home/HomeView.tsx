@@ -213,6 +213,17 @@ const HomeView: React.FC<Props> = (props) => {
                     </CustomMenuItem>
                 ),
             },
+            {
+                key: '_id',
+                item: (id: any) => (
+                    <CustomMenuItem
+                        to={'/bills/add/' + id}
+                        onClick={() => dispatch(disableSaveButton())}
+                    >
+                        Bill
+                    </CustomMenuItem>
+                ),
+            },
         ],
     }
 

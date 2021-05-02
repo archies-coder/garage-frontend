@@ -12,18 +12,38 @@ export interface BillsResult {
     data: IBill[]
 }
 
-export interface BillInputState {
-    brand: string
-    category: string
-    quantity: number
-    name: string
+export interface IBillInputState {
+    [key: number]: {
+        item: string
+        cost: number
+    }
+}
+export interface IBillSparePartInputState {
+    [key: number]: {
+        name: string
+        brand: string
+        quantity: number
+    }
 }
 
-export const defaultInputState: BillInputState = {
-    brand: '',
-    category: '',
-    quantity: 0,
+export const defaultBill = {
+    item: '',
+    cost: 0,
+}
+
+export const defaultSparePart = {
     name: '',
+    brand: '',
+    quantity: 0,
+}
+
+export const defaultBillInputState: IBillInputState = {
+    0: defaultBill,
+    1: defaultBill,
+}
+export const defaultSparePartsInputState: IBillSparePartInputState = {
+    0: defaultSparePart,
+    1: defaultSparePart,
 }
 
 interface BillState {
@@ -34,7 +54,8 @@ interface BillState {
     pageLinks: Links | null
     isLoading: boolean
     error: string | null
-    currentBill: BillInputState
+    currentBill: IBillInputState
+    currentBillSpareParts: IBillSparePartInputState
 }
 
 const billsInitialState: BillState = {
@@ -45,7 +66,8 @@ const billsInitialState: BillState = {
     pageLinks: {},
     isLoading: false,
     error: null,
-    currentBill: defaultInputState,
+    currentBill: defaultBillInputState,
+    currentBillSpareParts: defaultSparePartsInputState,
 }
 
 function startLoading(state: BillState) {
@@ -72,8 +94,27 @@ const bills = createSlice({
             state.bills.map((bill) => (state.billsById[bill._id] = bill))
         },
         getBillsFailure: loadingFailed,
-        setCurrentBill(state, { payload }: PayloadAction<BillInputState>) {
+        setCurrentBill(state, { payload }: PayloadAction<any>) {
             state.currentBill = payload
+        },
+        addNewBillItem(state) {
+            state.currentBill = {
+                ...state.currentBill,
+                [Object.keys(state.currentBill).length]: defaultBill,
+            }
+        },
+        setCurrentBillSpareParts(
+            state,
+            { payload }: PayloadAction<IBillSparePartInputState>
+        ) {
+            state.currentBillSpareParts = payload
+        },
+        addNewSparePart(state) {
+            state.currentBillSpareParts = {
+                ...state.currentBillSpareParts,
+                [Object.keys(state.currentBillSpareParts)
+                    .length]: defaultSparePart,
+            }
         },
     },
 })
@@ -83,6 +124,9 @@ export const {
     getBillsSuccess,
     getBillsFailure,
     setCurrentBill,
+    addNewBillItem,
+    setCurrentBillSpareParts,
+    addNewSparePart,
 } = bills.actions
 
 export default bills.reducer

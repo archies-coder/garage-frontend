@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux'
 // import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import { Link as NavLink } from 'react-router-dom'
 import { CustomMenuItem } from 'components/CustomMenuItem'
+import { doLogout } from 'pages/auth/AuthSlice'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -68,7 +69,7 @@ const NavigationBar: FunctionComponent<Props> = (props) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
 
-    // const { name } = useSelector((state: RootState) => state.auth)
+    const { username } = useSelector((state: RootState) => state.auth)
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget)
@@ -81,7 +82,7 @@ const NavigationBar: FunctionComponent<Props> = (props) => {
     }
 
     const handleLogout = () => {
-        // dispatch(doLogout())
+        dispatch(doLogout())
         handleClose()
     }
     return (
@@ -97,9 +98,9 @@ const NavigationBar: FunctionComponent<Props> = (props) => {
                 </NavLink>
             </Link>
             <Link variant="h6" color="textSecondary">
-                <NavLink to="/bills/add" className={classes.navLink}>
+                <NavLink to="/spare-parts/add" className={classes.navLink}>
                     {/* <PersonIcon />  */}
-                    <span className={classes.navItem}>Bill</span>
+                    <span className={classes.navItem}>Spare Part</span>
                 </NavLink>
             </Link>
             <Link href="#" variant="h6" color="textSecondary">
@@ -115,7 +116,7 @@ const NavigationBar: FunctionComponent<Props> = (props) => {
                     aria-haspopup="true"
                     onClick={handleClick}
                 >
-                    {/* {name} */}
+                    {username}
                 </span>
             </Link>
             {/* Open with fade transition */}

@@ -45,6 +45,10 @@ const Routes = [
         component: BillForm,
     },
     {
+        path: '/bills/add/:vehicleEntryId',
+        component: BillForm,
+    },
+    {
         path: '/bills',
         exact: true,
         component: BillView,

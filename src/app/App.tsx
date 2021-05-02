@@ -105,7 +105,7 @@ export default function App(props: Props) {
                             <Route
                                 key={path}
                                 exact={
-                                    typeof exact !== 'undefined' ? exact : true
+                                    typeof exact !== 'undefined' ? exact : false
                                 }
                                 path={path}
                                 component={component}
