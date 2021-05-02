@@ -3,11 +3,11 @@ import { format, subDays } from 'date-fns'
 import React, { FunctionComponent } from 'react'
 import { defaults, Line } from 'react-chartjs-2'
 
-export const MyChart2: FunctionComponent<any> = ({ visitorStats }) => {
+export const MyChart2: FunctionComponent<any> = ({ VehicleEntriestats }) => {
     const data = {
         datasets: [
             {
-                label: 'Visitors',
+                label: 'Vehicles',
                 fill: false,
                 lineTension: 0.1,
                 backgroundColor: '#192949', //'rgba(75,192,192,0.4)',
@@ -26,7 +26,7 @@ export const MyChart2: FunctionComponent<any> = ({ visitorStats }) => {
                 pointHoverBorderWidth: 2,
                 pointRadius: 4,
                 pointHitRadius: 10,
-                data: visitorStats,
+                data: VehicleEntriestats,
             },
         ],
     }

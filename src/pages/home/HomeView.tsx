@@ -122,23 +122,25 @@ const columns = [
         id: 'intime',
         label: 'In Time',
         isSort: true,
+        isDate: true,
     },
     {
         id: 'outime',
         label: 'Out Time',
         isSort: true,
+        isDate: true,
     },
 ]
 
 interface Props {}
 
 const homeStatsConfig = {
-    delivered: 0,
-    in_garage: 0,
-    parts_used: 0,
-    total_customers: 0,
-    VehicleEntriestats: 0,
-    isLoadingHomeStats: 0,
+    delivered: 15,
+    in_garage: 4,
+    parts_used: 27,
+    total_customers: 19,
+    VehicleEntriestats: 20,
+    isLoadingHomeStats: false,
 }
 
 const HomeView: React.FC<Props> = (props) => {
@@ -237,35 +239,42 @@ const HomeView: React.FC<Props> = (props) => {
                                     ></MyChart2>
                                 </div>
                             </Grid>
-                            {/* Table */}
-                            <Grid
-                                item
-                                xs
-                                style={{ height: '100%', marginTop: '20px' }}
-                            >
-                                <Paper className={classes.paper} elevation={0}>
-                                    <Box display="flex" justifyContent="start">
-                                        <SearchInput
-                                            style={{
-                                                marginTop: '33px',
-                                                marginLeft: '27px',
-                                            }}
-                                            //  onChange={(e: any) => { debugger; handleFilterChange({ vehicle: e.target.value }) }}
-                                            // value={filter.vehicle}
-                                            placeholder="Search vehicle"
-                                        />
-                                        {/* <SelectInput style={{marginTop: '33px', marginLeft: '27px'}} value="In Office" /> */}
-                                        {/*@ts-ignore*/}
-                                        <CustomizedSwitch
-                                            style={{
-                                                marginTop: '33px',
-                                                marginLeft: '27px',
-                                                height: '36px',
-                                            }}
-                                            label={'In Office'}
-                                            // checked={inOffice} onChange={() => { setInOffice(!inOffice) }}
-                                        />
-                                        {/* <Button onClick={() => { setFilter({ site: "", purpose: "", vehicle: "" }); dispatch(fetchInOfficeVisitors()) }}
+                        </Grid>
+                    </Paper>
+                    <Paper className={classes.paper} elevation={0}>
+                        {/* Table */}
+                        <Grid
+                            item
+                            xs
+                            style={{
+                                height: '100%',
+                                marginTop: 22,
+                                paddingRight: 22,
+                            }}
+                        >
+                            <Paper className={classes.paper} elevation={0}>
+                                <Box display="flex" justifyContent="start">
+                                    <SearchInput
+                                        style={{
+                                            marginTop: '33px',
+                                            marginLeft: '27px',
+                                        }}
+                                        //  onChange={(e: any) => { debugger; handleFilterChange({ vehicle: e.target.value }) }}
+                                        // value={filter.vehicle}
+                                        placeholder="Search vehicle"
+                                    />
+                                    {/* <SelectInput style={{marginTop: '33px', marginLeft: '27px'}} value="In Office" /> */}
+                                    {/*@ts-ignore*/}
+                                    {/* <CustomizedSwitch
+                                        style={{
+                                            marginTop: '33px',
+                                            marginLeft: '27px',
+                                            height: '36px',
+                                        }}
+                                        label={'In Office'}
+                                        // checked={inOffice} onChange={() => { setInOffice(!inOffice) }}
+                                    /> */}
+                                    {/* <Button onClick={() => { setFilter({ site: "", purpose: "", vehicle: "" }); dispatch(fetchInOfficeVisitors()) }}
                                 classes={{
                                     root: classes.buttonRoot, // class name, e.g. `classes-nesting-root-x`
                                     label: classes.label, // class name, e.g. `classes-nesting-label-x`
@@ -273,7 +282,7 @@ const HomeView: React.FC<Props> = (props) => {
                                 variant="contained" style={{ marginTop: '33px', marginLeft: '27px', height: '40px' }}>In Office
                             </Button> */}
 
-                                        {/* <SelectInput style={{ marginTop: '33px', marginLeft: '27px' }} onChange={(e: any) => { debugger; handleFilterChange({ purpose: e.target.value }) }} menuOptions={purpose.map(item => ({ title: item }))} defaultValue="All Purpose" value={filter.purpose} />
+                                    {/* <SelectInput style={{ marginTop: '33px', marginLeft: '27px' }} onChange={(e: any) => { debugger; handleFilterChange({ purpose: e.target.value }) }} menuOptions={purpose.map(item => ({ title: item }))} defaultValue="All Purpose" value={filter.purpose} />
                             <SelectInput style={{ marginTop: '33px', marginLeft: '27px' }} onChange={(e: any) => { debugger; handleFilterChange({ site: e.target.value }) }} menuOptions={sites.map(item => ({ title: item.sitename }))} defaultValue="All Sites" value={filter.site} />
                             <Button onClick={() => { setInOffice(false); handleFilterChange({ site: "", purpose: "", vehicle: "" }) }}
                                 classes={{
@@ -281,18 +290,18 @@ const HomeView: React.FC<Props> = (props) => {
                                     label: classes.label, // class name, e.g. `classes-nesting-label-x`
                                 }} variant="contained" style={{ marginTop: '33px', marginLeft: '27px', height: '40px' }}
                             >Clear Filter</Button> */}
-                                    </Box>
-                                    <TableWrapper
-                                        style={{
-                                            marginTop: '17px',
-                                            marginLeft: '32px',
-                                            marginRight: '30px',
-                                        }}
-                                        config={TableConfig}
-                                    />
-                                </Paper>
-                            </Grid>
+                                </Box>
+                                <TableWrapper
+                                    style={{
+                                        marginTop: '17px',
+                                        marginLeft: '32px',
+                                        marginRight: '30px',
+                                    }}
+                                    config={TableConfig}
+                                />
+                            </Paper>
                         </Grid>
+                        {/* </Grid> */}
                     </Paper>
                 </Grid>
             </Grid>

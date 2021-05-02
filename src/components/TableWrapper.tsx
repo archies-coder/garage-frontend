@@ -34,6 +34,7 @@ import {
 // import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import { Skeleton } from '@material-ui/lab'
+import { format } from 'date-fns'
 import React, { FunctionComponent, useState } from 'react'
 
 interface IRowProps {
@@ -152,7 +153,11 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
                 disabled={page >= Math.ceil(count / rowsPerPage) - 1}
                 aria-label="last page"
             >
-                {/* {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />} */}
+                {theme.direction === 'rtl' ? (
+                    <FirstPageIcon />
+                ) : (
+                    <LastPageIcon />
+                )}
             </IconButton>
         </div>
     )
@@ -357,6 +362,10 @@ export const TableWrapper: FunctionComponent<Props> = ({
         // pageChange && pageChange(0, parseInt(event.target.value, 10))
     }
 
+    const formatDate = (date: string) => {
+        return format(new Date(date), 'MMM dd, HH:mm a').toString()
+    }
+
     const TableHeader = (
         <TableHead className={classes.header}>
             {columns.map((column) => (
@@ -449,7 +458,13 @@ export const TableWrapper: FunctionComponent<Props> = ({
             {tableRows.map((row: any, i: number) => (
                 <TableRow key={i}>
                     {columns.map((col: any, j: number) => (
-                        <TableCell key={i + '' + j}>{row[col.id]}</TableCell>
+                        <TableCell key={i + '' + j}>
+                            {col.isDate
+                                ? row[col.id] !== undefined
+                                    ? formatDate(row[col.id])
+                                    : row[col.id]
+                                : row[col.id]}
+                        </TableCell>
                     ))}
                     {menuOptions && (
                         <TableCell
