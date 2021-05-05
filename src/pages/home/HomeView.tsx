@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import HomeDateDropdown from './HomeDateDropdown'
 import { disableSaveButton, fetchVehicleEntries } from './HomeSlice'
 import HomeStats from './HomeStats'
+import { fetchHomeStats } from './HomeStatsSlice'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -151,7 +152,7 @@ const HomeView: React.FC<Props> = (props) => {
     React.useEffect(() => {
         // dispatch(fetchVisitors(0, 10))
         dispatch(fetchVehicleEntries())
-        // dispatch(fetchHomeStats())
+        dispatch(fetchHomeStats())
     }, [dispatch])
 
     const {

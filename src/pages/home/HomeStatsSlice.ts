@@ -1,3 +1,4 @@
+import { getBackdropStart, getBackdropStop } from 'app/BackdropSlice'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { getStats } from 'api/home.api'
 import { AppThunk } from 'app/store'
@@ -79,9 +80,13 @@ export const fetchHomeStats = (selectedDate?: string): AppThunk => async (
 ) => {
     try {
         dispatch(getHomeStatsStart())
-        const { data } = await getStats(selectedDate)
+        dispatch(getBackdropStart())
+        const { data } = await getStats(
+            selectedDate ? selectedDate : new Date().toISOString()
+        )
         debugger
         dispatch(getHomeStatsSuccess(data))
+        dispatch(getBackdropStop())
     } catch (err) {
         dispatch(getHomeStatsFailure(err.toString()))
     }
