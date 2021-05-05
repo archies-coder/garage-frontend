@@ -1,4 +1,5 @@
 import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit'
+import { getStats } from 'api/home.api'
 import { getAllVehicles } from 'api/vehicle.api'
 import {
     createNewVehicleEntry,

@@ -1,6 +1,8 @@
 import React, { FunctionComponent } from 'react'
 import { createStyles, Paper, Theme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useSelector } from 'react-redux'
+import { RootState } from 'app/store'
 
 interface OwnProps {
     config: any
@@ -55,9 +57,8 @@ const HomeStats: FunctionComponent<Props> = ({ config, ...props }) => {
         in_garage,
         parts_used,
         total_customers,
-        visitorStats,
-        isLoadingHomeStats,
-    } = config
+        isLoading,
+    } = useSelector((state: RootState) => state.homeStats)
     return (
         <div className={classes.root}>
             <Paper elevation={0}>

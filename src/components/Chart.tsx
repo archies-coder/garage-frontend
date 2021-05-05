@@ -1,9 +1,13 @@
 import { Box } from '@material-ui/core'
 import { format, subDays } from 'date-fns'
-import React, { FunctionComponent } from 'react'
-import { defaults, Line } from 'react-chartjs-2'
+import React, { FunctionComponent, useEffect } from 'react'
+import { Line } from 'react-chartjs-2'
 
-export const MyChart2: FunctionComponent<any> = ({ VehicleEntriestats }) => {
+type Props = {
+    VehicleEntriestats: number[]
+}
+
+export const MyChart2: FunctionComponent<Props> = ({ VehicleEntriestats }) => {
     const data = {
         datasets: [
             {
@@ -26,7 +30,7 @@ export const MyChart2: FunctionComponent<any> = ({ VehicleEntriestats }) => {
                 pointHoverBorderWidth: 2,
                 pointRadius: 4,
                 pointHitRadius: 10,
-                data: VehicleEntriestats,
+                data: [...VehicleEntriestats],
             },
         ],
     }
@@ -102,6 +106,7 @@ export const MyChart2: FunctionComponent<any> = ({ VehicleEntriestats }) => {
             ],
         },
     }
+
     return (
         <Box>
             {/* @ts-ignore */}

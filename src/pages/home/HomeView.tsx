@@ -161,6 +161,10 @@ const HomeView: React.FC<Props> = (props) => {
         pageLinks,
     } = useSelector((state: RootState) => state.VehicleEntries)
 
+    const { vehicleEntriestats } = useSelector(
+        (state: RootState) => state.homeStats
+    )
+
     const handleCheckOut = () => {
         console.log('Check out')
     }
@@ -246,7 +250,7 @@ const HomeView: React.FC<Props> = (props) => {
                             <Grid item md={4}>
                                 <div className={classes.graph}>
                                     <MyChart2
-                                        VehicleEntriestats={[0, 15, 45, 5, 10]}
+                                        VehicleEntriestats={vehicleEntriestats}
                                     ></MyChart2>
                                 </div>
                             </Grid>

@@ -6,6 +6,9 @@ import EventIcon from '@material-ui/icons/Event'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import { ExpandMore } from '@material-ui/icons'
+import { RootState } from 'app/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchHomeStats, setSelectedDate } from './HomeStatsSlice'
 
 interface OwnProps extends React.HTMLAttributes<any> {}
 
@@ -66,13 +69,15 @@ const useStyles = makeStyles((theme: Theme) =>
 const HomeDateDropdown: FunctionComponent<Props> = (props) => {
     const classes = useStyles()
 
-    const [selectedDate, setSelectedDate] = React.useState<Date | null>(
-        new Date()
-    )
     const [isOpen, setIsOpen] = React.useState(false)
 
+    const dispatch = useDispatch()
+
+    const { selectedDate } = useSelector((state: RootState) => state.homeStats)
+
     const handleDateChange = (date: Date | null) => {
-        setSelectedDate(date)
+        dispatch(setSelectedDate(date?.toISOString()))
+        dispatch(fetchHomeStats(date?.toISOString()))
     }
     return (
         <Box className={classes.container} {...props}>
@@ -92,7 +97,7 @@ const HomeDateDropdown: FunctionComponent<Props> = (props) => {
                     margin="normal"
                     id="date-picker-inline2"
                     autoOk
-                    value={selectedDate}
+                    value={selectedDate ? new Date(selectedDate) : new Date()}
                     onChange={handleDateChange}
                     // keyboardIcon={<ExpandMore></ExpandMore>}
                     open={isOpen}

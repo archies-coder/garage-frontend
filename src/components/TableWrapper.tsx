@@ -363,7 +363,7 @@ export const TableWrapper: FunctionComponent<Props> = ({
     }
 
     const formatDate = (date: string) => {
-        return format(new Date(date), 'MMM dd, HH:mm a').toString()
+        return date ? format(new Date(date), 'MMM dd, HH:mm a').toString() : ''
     }
 
     const TableHeader = (
