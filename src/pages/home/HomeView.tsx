@@ -99,9 +99,13 @@ const columns = [
     //     id: "profilePicPath",
     //     label: '',
     // },
+    // {
+    //     id: '_id',
+    //     label: 'Check-in Id',
+    // },
     {
-        id: '_id',
-        label: 'Check-in Id',
+        id: 'model',
+        label: 'Vehicle Model',
     },
     {
         id: 'vehicleNo',
