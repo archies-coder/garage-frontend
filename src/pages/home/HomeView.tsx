@@ -104,7 +104,7 @@ const columns = [
     //     label: 'Check-in Id',
     // },
     {
-        id: 'model',
+        id: 'vehicleModel',
         label: 'Vehicle Model',
     },
     {
