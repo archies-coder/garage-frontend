@@ -7,6 +7,8 @@ import theme from 'theme'
 import App from './app/App'
 import { store } from './app/store'
 import './index.css'
+import './app/styles.css'
+
 import * as serviceWorker from './serviceWorker'
 
 ReactDOM.render(

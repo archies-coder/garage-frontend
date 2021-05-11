@@ -1,0 +1,28 @@
+@font-face {
+    font-family: 'Proxima Nova';
+    src: url('../assets//fonts/ProximaNova-Regular.otf') format('opentype'); /* Legacy iOS */
+}
+
+@font-face {
+    font-family: 'Proxima Nova';
+    font-weight: bold;
+    src: url('../assets/fonts/Proxima\ Nova\ Bold.otf') format('opentype');
+}
+
+html,
+body {
+    height: 100%;
+    overflow: auto;
+    font-family: 'Proxima Nova', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#date-picker-inline {
+    padding: 12px;
+    font-size: 12px;
+    border-radius: 10px;
+}
