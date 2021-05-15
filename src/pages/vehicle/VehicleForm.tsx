@@ -8,6 +8,8 @@ import {
     Typography,
 } from '@material-ui/core'
 import { ArrowBackIos, CameraAlt } from '@material-ui/icons'
+import { getBackdropStop } from 'app/BackdropSlice'
+import { startSnackbar } from 'app/SnackbarSlice'
 import { RootState } from 'app/store'
 import CustomButton from 'components/inputs/Button'
 import DateTimeInput from 'components/inputs/DateTimeInput'
@@ -94,6 +96,8 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function VehicleForm(props: IVehicleFormProps) {
     const classes = useStyles()
 
+    const [vehiclepicloca, setVehiclepicloca] = React.useState('')
+
     const dispatch = useDispatch()
 
     React.useEffect(() => {
@@ -104,7 +108,27 @@ export default function VehicleForm(props: IVehicleFormProps) {
         (state: RootState) => state.VehicleEntries
     )
 
-    const { vehicleNo } = currentVehicleEntry
+    const { vehicleNo, vehicleImagePath } = currentVehicleEntry
+
+    function srcToFile(src: string, fileName: string, mimeType = 'image/gif') {
+        return fetch(src)
+            .then(function (res) {
+                return res.arrayBuffer()
+            })
+            .then(function (buf) {
+                return new File([buf], fileName, { type: mimeType })
+            })
+    }
+
+    function handleFileChange() {
+        //debugger
+        //@ts-ignore
+        const files = document.getElementById('vehiclepic').files
+        if (files.length) {
+            //@ts-ignore
+            setVehiclepicloca(URL.createObjectURL(files[0]))
+        }
+    }
 
     const handleSubmit = async (e: any) => {
         e.preventDefault()
@@ -133,7 +157,31 @@ export default function VehicleForm(props: IVehicleFormProps) {
             intime,
             remark,
         }
-        dispatch(postVehicleEntry(data))
+
+        const vehiclepicfile =
+            //@ts-ignore
+            document.getElementById('vehiclepic').files[0] ||
+            (vehicleImagePath &&
+                (await srcToFile(vehicleImagePath, 'vehiclepic').then(
+                    (file) => file
+                ))) ||
+            ''
+
+        const bodyFormData = new FormData()
+        debugger
+        bodyFormData.append('vehicleImage', vehiclepicfile)
+        bodyFormData.append('vehicleNo', vehicleNo)
+        bodyFormData.append('vehicleModel', model)
+        bodyFormData.append('vehicleMake', make)
+        bodyFormData.append('vehicleType', vehicleType)
+        bodyFormData.append('customerName', name)
+        bodyFormData.append('purpose', purpose)
+        bodyFormData.append('remark', remark)
+        bodyFormData.append('intime', new Date(intime).toISOString())
+        bodyFormData.append('customerMobile', mobile)
+        bodyFormData.append('customerAddress', address)
+
+        dispatch(postVehicleEntry(bodyFormData, () => props.history.push('/')))
     }
 
     const handleVehivcleNoAutoComplete = (obj: any) => {
@@ -317,29 +365,51 @@ export default function VehicleForm(props: IVehicleFormProps) {
                                             // disabled={setReadOnly(0)}
                                             accept="image/*"
                                             className={classes.UploadInput}
-                                            // onChange={handleFileChange}
-                                            id="profilepic"
+                                            onChange={handleFileChange}
+                                            id="vehiclepic"
                                             type="file"
-                                            name="profilepic"
+                                            name="vehiclepic"
                                         />
-                                        <label htmlFor="profilepic">
-                                            {/* {profilePicPath || profilepicloca ? */}
-                                            {/* <img
+                                        <label htmlFor="vehiclepic">
+                                            {vehicleImagePath ||
+                                            vehiclepicloca ? (
+                                                <img
                                                     onLoad={() => {
-                                                        // profilepicloca && URL.revokeObjectURL(profilepicloca);
-                                                        //@ts-ignore
-                                                        // profilePicPath && (document.getElementById('profilepic').files[0] = srcToFile(profilePicPath, 'profilepic', 'image/gif'))
+                                                        vehiclepicloca &&
+                                                            URL.revokeObjectURL(
+                                                                vehiclepicloca
+                                                            )
+                                                        if (vehicleImagePath) {
+                                                            //@ts-ignore
+                                                            const x = document.getElementById(
+                                                                'vehiclepic'
+                                                            )
+                                                            //@ts-ignore
+                                                            x.files[0] = srcToFile(
+                                                                vehicleImagePath,
+                                                                'vehiclepic',
+                                                                'image/gif'
+                                                            )
+                                                        }
                                                     }}
-                                                    id="profilepicimg" height={85} width={85}
-                                                    // src={profilepicloca ? profilepicloca : `http://localhost:8000/${profilePicPath}`}
-                                                    />
-                                                : */}
-                                            <CameraAlt
-                                                alignmentBaseline={'central'}
-                                                color={'disabled'}
-                                                fontSize={'large'}
-                                            />
-                                            {/* } */}
+                                                    id="vehiclepicimg"
+                                                    height={85}
+                                                    width={85}
+                                                    src={
+                                                        vehiclepicloca
+                                                            ? vehiclepicloca
+                                                            : vehicleImagePath
+                                                    }
+                                                />
+                                            ) : (
+                                                <CameraAlt
+                                                    alignmentBaseline={
+                                                        'central'
+                                                    }
+                                                    color={'disabled'}
+                                                    fontSize={'large'}
+                                                />
+                                            )}
                                         </label>
                                     </div>
                                     <Typography

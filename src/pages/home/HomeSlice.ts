@@ -23,6 +23,7 @@ export interface VehicleInfo {
     intime: any
     mobile: any
     outime: any
+    vehicleImagePath?: string
 }
 
 export const defaultVehicle: VehicleInfo = {
@@ -216,7 +217,7 @@ export const fetchVehicleEntries = (
 }
 
 export const postVehicleEntry = (
-    vehicle: any,
+    vehicle: FormData,
     callback?: any
 ): AppThunk => async (dispatch: Dispatch<any>) => {
     dispatch(getBackdropStart())

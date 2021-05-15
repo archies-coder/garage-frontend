@@ -3,6 +3,7 @@ export interface ISparePartInput {
     category: string
     quantity: number
     brand: string
+    cost: number
 }
 
 export interface ISparePart extends ISparePartInput {

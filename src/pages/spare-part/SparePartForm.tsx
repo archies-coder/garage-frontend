@@ -90,7 +90,7 @@ const SparePartForm: FunctionComponent<Props> = (props) => {
         (state: RootState) => state.spareParts
     )
 
-    const { name, category, brand, quantity } = currentSparePart
+    const { name, category, brand, quantity, cost } = currentSparePart
     const inputState = currentSparePart
 
     const setInputState = (sparePart: SparePartInputState) => {
@@ -141,6 +141,7 @@ const SparePartForm: FunctionComponent<Props> = (props) => {
                     category: category,
                     brand: brand,
                     quantity: quantity,
+                    cost: cost,
                 },
                 () => setInputState(defaultInputState)
             )
@@ -256,13 +257,13 @@ const SparePartForm: FunctionComponent<Props> = (props) => {
                                 value={category}
                             />
 
-                            {/* <TextInput
+                            <TextInput
                                 required
-                                label="Brand"
+                                label="Cost"
                                 onChange={handleChange}
-                                name="brand"
-                                value={brand}
-                            /> */}
+                                name="cost"
+                                value={cost}
+                            />
                         </Grid>
                         <Grid item xs={6}>
                             <CustomAutoComplete

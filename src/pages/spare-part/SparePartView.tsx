@@ -45,6 +45,10 @@ const columns = [
         label: 'Category',
     },
     {
+        id: 'cost',
+        label: 'Cost',
+    },
+    {
         id: 'quantity',
         label: 'Quantity',
     },

@@ -1,5 +1,6 @@
 import classes from '*.module.css'
 import {
+    Avatar,
     Box,
     createStyles,
     fade,
@@ -95,10 +96,10 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 const columns = [
-    // {
-    //     id: "profilePicPath",
-    //     label: '',
-    // },
+    {
+        id: 'vehicleImagePath',
+        label: '',
+    },
     // {
     //     id: '_id',
     //     label: 'Check-in Id',
@@ -185,7 +186,7 @@ const HomeView: React.FC<Props> = (props) => {
                 //hideMenu: !!el.checkOutBy,
                 //@ts-ignore
                 // checked_out: !!el.checkOutBy,
-                // profilePicPath: <Avatar src={`http://localhost:8000/${el.profilePicPath}`} />
+                vehicleImagePath: <Avatar src={el.vehicleImagePath} />,
             }
         }),
         pagination: true,

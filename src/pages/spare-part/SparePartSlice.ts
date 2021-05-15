@@ -19,6 +19,7 @@ export interface SparePartInputState {
     category: string
     quantity: number
     name: string
+    cost: number
 }
 
 export const defaultInputState: SparePartInputState = {
@@ -26,6 +27,7 @@ export const defaultInputState: SparePartInputState = {
     category: '',
     quantity: 0,
     name: '',
+    cost: 0,
 }
 
 interface SparePartState {
