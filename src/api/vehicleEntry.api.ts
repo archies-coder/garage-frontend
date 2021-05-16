@@ -45,8 +45,8 @@ export async function createNewVehicleEntry(
 ): Promise<any> {
     // const {
     //     vehicleNo,
-    //     model,
-    //     make,
+    //     vehicleModel,
+    //     vehicleMake,
     //     vehicleType,
     //     name,
     //     mobile,
@@ -65,8 +65,8 @@ export async function createNewVehicleEntry(
 
     // return await apiProvider.post('checkin', {
     //     vehicleNo: vehicleNo,
-    //     vehicleModel: model,
-    //     vehicleMake: make,
+    //     vehicleModel: vehicleModel,
+    //     vehicleMake: vehicleMake,
     //     vehicleType: vehicleType,
     //     customerName: name,
     //     customerMobile: mobile,

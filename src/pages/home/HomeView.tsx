@@ -18,7 +18,7 @@ import TableWrapper from 'components/TableWrapper'
 import * as React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import HomeDateDropdown from './HomeDateDropdown'
-import { disableSaveButton, fetchVehicleEntries } from './HomeSlice'
+import { disableSaveButton, doCheckOut, fetchVehicleEntries } from './HomeSlice'
 import HomeStats from './HomeStats'
 import { fetchHomeStats } from './HomeStatsSlice'
 
@@ -171,8 +171,8 @@ const HomeView: React.FC<Props> = (props) => {
         (state: RootState) => state.homeStats
     )
 
-    const handleCheckOut = () => {
-        console.log('Check out')
+    const handleCheckOut = (id: string) => {
+        dispatch(doCheckOut(id, () => dispatch(fetchVehicleEntries())))
     }
 
     const TableConfig = {
@@ -207,9 +207,16 @@ const HomeView: React.FC<Props> = (props) => {
                 hideMenu: (row: any) => {
                     return row.checked_out
                 },
-                callback: handleCheckOut,
-                item: (id: any) => {
-                    return <CustomMenuItem to="/">{'Check Out'}</CustomMenuItem>
+                // callback: handleCheckOut,
+                item: (id: string) => {
+                    return (
+                        <CustomMenuItem
+                            onClick={() => handleCheckOut(id)}
+                            to="/"
+                        >
+                            Check Out
+                        </CustomMenuItem>
+                    )
                 },
             },
             {

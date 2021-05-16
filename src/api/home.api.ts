@@ -1,3 +1,4 @@
+import { apis } from './Apis'
 import { apiProvider } from './utils/provider'
 const url = 'vehicle-entries'
 const plural = 'vehicle-entries'
@@ -30,4 +31,8 @@ export async function getAllVehicleEntries(
 
 export async function getStats(date?: string) {
     return await apiProvider.getAll<IStatResponse>(`${stats}?date=${date}`)
+}
+
+export async function checkOut(id: string) {
+    return await apis.get('/checkout/' + id)
 }

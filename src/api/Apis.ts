@@ -24,9 +24,9 @@ export const apis = axios.create({
     timeout: 10000,
     params: {
         //@ts-ignore
-        token: token || '',
+        // token: token || '',
     },
-    //headers: {'X-Custom-Header': 'foobar'}
+    headers: { Authorization: `Bearer ${token}` || '' },
 })
 
 export async function signIn(username: string, password: string) {

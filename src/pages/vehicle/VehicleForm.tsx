@@ -16,6 +16,8 @@ import DateTimeInput from 'components/inputs/DateTimeInput'
 import SelectInput from 'components/inputs/SelectInput'
 import TextInput from 'components/inputs/TextInput'
 import {
+    defaultVehicle,
+    enableSaveButton,
     fetchAllVehicles,
     postVehicleEntry,
     setCurrentVehicleEntry,
@@ -24,79 +26,16 @@ import { config as VehicleFormConfig } from 'pages/vehicle/VehicleFormConfig'
 import * as React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
+import { useVehicleFormStyles } from './VehicleFormStyles'
 
 export interface IVehicleFormProps extends RouteComponentProps<any> {}
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        paper: {
-            backgroundColor: '#E7ECF6',
-            borderRadius: theme.shape.borderRadius - 5,
-            marginRight: 20,
-            height: '100%',
-        },
-        header: {
-            fontSize: '20px',
-            fontWeight: 'bold',
-            padding: theme.spacing(2, 0, 0, 4),
-            color: theme.palette.text.primary,
-        },
-        headerSecondary: {
-            fontSize: '18.75px',
-            fontWeight: 'bold',
-            padding: theme.spacing(0, 0, 2, 0),
-            color: theme.palette.text.primary,
-        },
-        arrowBack: {
-            height: '16px',
-            // verticalAlign: 'bottom',
-            cursor: 'pointer',
-        },
-        imageContainer: {
-            padding: theme.spacing(3, 0, 0, 8),
-        },
-        imageUpload: {
-            position: 'relative',
-            backgroundColor: '#fff',
-            height: 86,
-            width: 86,
-            textAlign: 'center',
-            borderRadius: theme.shape.borderRadius,
-
-            '&  svg': {
-                height: '100%',
-                opacity: 0.7,
-                fontSize: '44px',
-                cursor: 'pointer',
-            },
-        },
-        VehicleInfo: {
-            padding: theme.spacing(2, 0, 1, 8),
-        },
-        owner: {
-            padding: theme.spacing(1, 0, 2, 8),
-        },
-        rightInputs: {
-            marginTop: 117,
-        },
-        button: {
-            // marginRight: 20
-        },
-        selectInput: {
-            '& > .makeStyles-inputContainer-32': {
-                // padding: 0
-            },
-        },
-        UploadInput: {
-            display: 'none',
-        },
-    })
-)
-
 export default function VehicleForm(props: IVehicleFormProps) {
-    const classes = useStyles()
+    const classes = useVehicleFormStyles()
 
-    const [vehiclepicloca, setVehiclepicloca] = React.useState('')
+    const [vehiclepicloca, setVehiclepicloca] = React.useState<string>('')
+    const [readOnly, setReadOnly] = React.useState<boolean>(false)
+    const [selectedFile, setSlectedFile] = React.useState<File>()
 
     const dispatch = useDispatch()
 
@@ -104,63 +43,51 @@ export default function VehicleForm(props: IVehicleFormProps) {
         dispatch(fetchAllVehicles())
     }, [dispatch])
 
-    const { currentVehicleEntry, VehiclesByVehicleNo } = useSelector(
-        (state: RootState) => state.VehicleEntries
-    )
+    const {
+        currentVehicleEntry,
+        VehiclesByVehicleNo,
+        VehicleEntriesById,
+        saveButtonActive,
+    } = useSelector((state: RootState) => state.VehicleEntries)
 
     const { vehicleNo, vehicleImagePath } = currentVehicleEntry
 
-    function srcToFile(src: string, fileName: string, mimeType = 'image/gif') {
-        return fetch(src)
-            .then(function (res) {
-                return res.arrayBuffer()
-            })
-            .then(function (buf) {
-                return new File([buf], fileName, { type: mimeType })
-            })
+    async function srcToFile(
+        src: string,
+        fileName: string,
+        mimeType = 'image/gif'
+    ) {
+        const res = await fetch(src)
+        const buf = await res.arrayBuffer()
+        return new File([buf], fileName, { type: mimeType })
     }
 
-    function handleFileChange() {
-        //debugger
-        //@ts-ignore
-        const files = document.getElementById('vehiclepic').files
-        if (files.length) {
-            //@ts-ignore
+    function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+        // const files = document.getElementById('vehiclepic').files
+        const files = event.currentTarget.files
+        if (files?.length) {
+            setSlectedFile(files[0])
             setVehiclepicloca(URL.createObjectURL(files[0]))
         }
     }
 
     const handleSubmit = async (e: any) => {
         e.preventDefault()
-        console.log(currentVehicleEntry)
         const {
             vehicleNo,
-            make,
-            model,
+            vehicleMake,
+            vehicleModel,
             vehicleType,
-            name,
-            mobile,
-            city: address,
+            customerName,
+            customerMobile,
+            customerAddress: address,
             purpose,
             intime,
             remark,
         } = currentVehicleEntry
-        const data = {
-            vehicleNo,
-            model,
-            make,
-            vehicleType,
-            name,
-            mobile,
-            address,
-            purpose,
-            intime,
-            remark,
-        }
 
         const vehiclepicfile =
-            //@ts-ignore
-            document.getElementById('vehiclepic').files[0] ||
+            selectedFile ||
             (vehicleImagePath &&
                 (await srcToFile(vehicleImagePath, 'vehiclepic').then(
                     (file) => file
@@ -168,17 +95,17 @@ export default function VehicleForm(props: IVehicleFormProps) {
             ''
 
         const bodyFormData = new FormData()
-        debugger
+
         bodyFormData.append('vehicleImage', vehiclepicfile)
         bodyFormData.append('vehicleNo', vehicleNo)
-        bodyFormData.append('vehicleModel', model)
-        bodyFormData.append('vehicleMake', make)
+        bodyFormData.append('vehicleModel', vehicleModel)
+        bodyFormData.append('vehicleMake', vehicleMake)
         bodyFormData.append('vehicleType', vehicleType)
-        bodyFormData.append('customerName', name)
+        bodyFormData.append('customerName', customerName)
         bodyFormData.append('purpose', purpose)
         bodyFormData.append('remark', remark)
         bodyFormData.append('intime', new Date(intime).toISOString())
-        bodyFormData.append('customerMobile', mobile)
+        bodyFormData.append('customerMobile', customerMobile)
         bodyFormData.append('customerAddress', address)
 
         dispatch(postVehicleEntry(bodyFormData, () => props.history.push('/')))
@@ -192,8 +119,8 @@ export default function VehicleForm(props: IVehicleFormProps) {
                 setCurrentVehicleEntry({
                     ...currentVehicleEntry,
                     ...obj,
-                    make: vehicleMake,
-                    model: vehicleModel,
+                    vehicleMake: vehicleMake,
+                    vehicleModel: vehicleModel,
                     vehicleType: vehicleType,
                 })
             )
@@ -223,6 +150,28 @@ export default function VehicleForm(props: IVehicleFormProps) {
         //     dispatch(doAutoPopulateVehicle(value, ''))
         // }
     }
+
+    const id = props.match.params.vehicleEntryId
+
+    const fetchVehicleEntriesById = (id: any) => {
+        return VehicleEntriesById[id]
+    }
+
+    React.useEffect(() => {
+        id != -1 &&
+            dispatch(
+                setCurrentVehicleEntry(
+                    fetchVehicleEntriesById(id) || defaultVehicle
+                )
+            )
+    }, [id])
+
+    React.useEffect(() => {
+        if (id == -1 || !id) {
+            //showSaveButton = true
+            dispatch(enableSaveButton())
+        }
+    }, [])
 
     const VehicleEntriesectionFields = VehicleFormConfig.filter(
         (i) => i.section === 'VI'
@@ -279,7 +228,7 @@ export default function VehicleForm(props: IVehicleFormProps) {
                                 // readOnly: setReadOnly(o),
                             }
                         }
-                        // disabled={setReadOnly(o)}
+                        disabled={readOnly}
                     />
                 )}
             </Grid>
@@ -315,7 +264,7 @@ export default function VehicleForm(props: IVehicleFormProps) {
                             width: 446,
                             marginLeft: i % 2 === 0 ? '64px' : '28px',
                         },
-                        // disabled: setReadOnly(0),
+                        disabled: readOnly,
                     })
                 ) : (
                     <TextInput
@@ -332,10 +281,10 @@ export default function VehicleForm(props: IVehicleFormProps) {
                         value={currentVehicleEntry[o.id]}
                         InputProps={
                             {
-                                // readOnly: setReadOnly(o),
+                                // readOnly: readOnly,
                             }
                         }
-                        // disabled={setReadOnly(o)}
+                        disabled={readOnly}
                     />
                 )}
             </Grid>
@@ -362,7 +311,7 @@ export default function VehicleForm(props: IVehicleFormProps) {
                                 >
                                     <div className={classes.imageUpload}>
                                         <input
-                                            // disabled={setReadOnly(0)}
+                                            disabled={readOnly}
                                             accept="image/*"
                                             className={classes.UploadInput}
                                             onChange={handleFileChange}
@@ -379,18 +328,21 @@ export default function VehicleForm(props: IVehicleFormProps) {
                                                             URL.revokeObjectURL(
                                                                 vehiclepicloca
                                                             )
-                                                        if (vehicleImagePath) {
-                                                            //@ts-ignore
-                                                            const x = document.getElementById(
-                                                                'vehiclepic'
-                                                            )
-                                                            //@ts-ignore
-                                                            x.files[0] = srcToFile(
-                                                                vehicleImagePath,
-                                                                'vehiclepic',
-                                                                'image/gif'
-                                                            )
-                                                        }
+                                                        // if (vehicleImagePath) {
+                                                        //     //@ts-ignore
+                                                        //     const x = [
+                                                        //         ...//@ts-ignore
+                                                        //         document.getElementById(
+                                                        //             'vehiclepic'
+                                                        //         ).files,
+                                                        //     ]
+                                                        //     //@ts-ignore
+                                                        //     x[0] = srcToFile(
+                                                        //         vehicleImagePath,
+                                                        //         'vehiclepic',
+                                                        //         'image/gif'
+                                                        //     )
+                                                        // }
                                                     }}
                                                     id="vehiclepicimg"
                                                     height={85}
@@ -441,18 +393,18 @@ export default function VehicleForm(props: IVehicleFormProps) {
                                     // menuOptions={selectInputMenu}
                                 />
                                 <Box className={classes.button}>
-                                    {/* {saveButtonActive &&  */}
-                                    <CustomButton
-                                        type="submit"
-                                        style={{
-                                            height: '38px',
-                                            width: '168px',
-                                            marginTop: '1px',
-                                        }}
-                                    >
-                                        Save
-                                    </CustomButton>
-                                    {/*  } */}
+                                    {saveButtonActive && (
+                                        <CustomButton
+                                            type="submit"
+                                            style={{
+                                                height: '38px',
+                                                width: '168px',
+                                                marginTop: '1px',
+                                            }}
+                                        >
+                                            Save
+                                        </CustomButton>
+                                    )}
                                 </Box>
                             </Box>
                         </Grid>

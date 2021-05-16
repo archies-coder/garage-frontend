@@ -1,3 +1,4 @@
+import { apis } from './../Apis'
 import axios from 'axios'
 import { handleError, handleResponse } from './response'
 
@@ -27,39 +28,39 @@ async function getAll<T = void>(
     const url = params
         ? `${BASE_URL}/${resource}?${query}`
         : `${BASE_URL}/${resource}`
-    return await axios.get(url).then(handleResponse).catch(handleError)
+    return await apis.get(url).then(handleResponse).catch(handleError)
 }
 
 async function getSingle<T = void>(resource: string, id: string): Promise<T> {
-    return await axios
+    return await apis
         .get(`${BASE_URL}/${resource}/${id}`)
         .then(handleResponse)
         .catch(handleError)
 }
 
 async function post(resource: string, model: any) {
-    return await axios
+    return await apis
         .post(`${BASE_URL}/${resource}`, model)
         .then(handleResponse)
         .catch(handleError)
 }
 
 async function put(resource: string, model: string) {
-    return await axios
+    return await apis
         .put(`${BASE_URL}/${resource}`, model)
         .then(handleResponse)
         .catch(handleError)
 }
 
 async function patch(resource: string, model: string) {
-    return await axios
+    return await apis
         .patch(`${BASE_URL}/${resource}`, model)
         .then(handleResponse)
         .catch(handleError)
 }
 
 async function remove(resource: string, id: string) {
-    return await axios
+    return await apis
         .delete(`${BASE_URL}/${resource}/${id}`)
         .then(handleResponse)
         .catch(handleError)

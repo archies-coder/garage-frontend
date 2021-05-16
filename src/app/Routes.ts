@@ -40,6 +40,11 @@ const Routes = [
         component: VehicleForm,
     },
     {
+        path: '/vehicle/:vehicleEntryId',
+        exact: true,
+        component: VehicleForm,
+    },
+    {
         path: '/bills/add',
         exact: true,
         component: BillForm,

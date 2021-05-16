@@ -14,14 +14,14 @@ interface IVehicleFormConfig {
 export const config: IVehicleFormConfig[] = [
     {
         name: 'Vehicle Make',
-        id: 'make',
+        id: 'vehicleMake',
         section: 'VI',
         seq: 1,
         required: true,
     },
     {
         name: 'Vehicle Model',
-        id: 'model',
+        id: 'vehicleModel',
         section: 'VI',
         seq: 2,
         required: false,
@@ -53,7 +53,7 @@ export const config: IVehicleFormConfig[] = [
     {
         name: 'Address/Locality/City',
         // isChecked: false,
-        id: 'city',
+        id: 'customerAddress',
         section: 'OI',
         seq: 9,
     },
@@ -97,14 +97,14 @@ export const config: IVehicleFormConfig[] = [
     // },
     {
         name: 'Owner Number',
-        id: 'mobile',
+        id: 'customerMobile',
         section: 'OI',
         seq: 0,
     },
 
     {
         name: 'Owner Name',
-        id: 'name',
+        id: 'customerName',
         section: 'OI',
         seq: 2,
     },

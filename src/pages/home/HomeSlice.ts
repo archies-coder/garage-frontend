@@ -1,5 +1,5 @@
 import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit'
-import { getStats } from 'api/home.api'
+import { checkOut, getStats } from 'api/home.api'
 import { getAllVehicles } from 'api/vehicle.api'
 import {
     createNewVehicleEntry,
@@ -11,33 +11,33 @@ import { AppThunk } from 'app/store'
 import { Links } from 'parse-link-header'
 
 export interface VehicleInfo {
-    make: string
-    model: string
+    vehicleMake: string
+    vehicleModel: string
     vehicleNo: string
-    name: string
+    customerName: string
     purpose: string
     remark: string
     vehicleType: string
-    _id?: any
-    city: any
-    intime: any
-    mobile: any
-    outime: any
+    _id: string
+    customerAddress: string
+    intime: string
+    customerMobile: any
+    outime: string
     vehicleImagePath?: string
 }
 
 export const defaultVehicle: VehicleInfo = {
     _id: '',
-    city: '',
+    customerAddress: '',
     intime: new Date().toISOString(),
-    mobile: '',
-    name: '',
+    customerMobile: '',
+    customerName: '',
     outime: '',
     purpose: '',
     remark: '',
     vehicleNo: '',
-    make: '',
-    model: '',
+    vehicleMake: '',
+    vehicleModel: '',
     vehicleType: '',
 }
 
@@ -122,14 +122,18 @@ const VehicleEntries = createSlice({
             //     vehicleNo,
             // } = vehicleId
             // state.currentVehicleEntry._id = _id
-            // state.currentVehicleEntry.make = vehicleMake
-            // state.currentVehicleEntry.model = vehicleModel
+            // state.currentVehicleEntry.vehicleMake = vehicleMake
+            // state.currentVehicleEntry.vehicleModel = vehicleModel
             // state.currentVehicleEntry.vehicleType = vehicleType
             // state.currentVehicleEntry.vehicleNo = vehicleNo
             // state.currentVehicleEntry.intime = intime
             // state.currentVehicleEntry.purpose = purpose
             // state.currentVehicleEntry.remark = remark
-            state.currentVehicleEntry = payload
+            const obj = {
+                ...payload,
+                intime: new Date(payload.intime).toISOString(),
+            }
+            state.currentVehicleEntry = obj
         },
         // setFilter(state, { payload }: PayloadAction<any>) {
         //     state.filter = { ...state.filter, ...payload }
@@ -232,6 +236,30 @@ export const postVehicleEntry = (
         dispatch(getBackdropStop())
         dispatch(
             startSnackbar({ message: error.message || 'Something went wrong' })
+        )
+    }
+}
+
+export const doCheckOut = (
+    id: string,
+    callback?: () => any
+): AppThunk => async (dispatch) => {
+    dispatch(getBackdropStart())
+    try {
+        await checkOut(id)
+        callback && callback()
+        dispatch(getBackdropStop())
+        dispatch(
+            startSnackbar({
+                message: 'Vehicle has been checked out',
+            })
+        )
+    } catch (error) {
+        dispatch(getBackdropStop())
+        dispatch(
+            startSnackbar({
+                message: error.message || 'Something went wrong',
+            })
         )
     }
 }
