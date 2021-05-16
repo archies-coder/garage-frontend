@@ -45,7 +45,7 @@ export async function signIn(username: string, password: string) {
         )
         .then((res) => {
             //@ts-ignore
-            apis.defaults.params.token = res.data.token
+            // apis.defaults.params.token = res.data.token
             return res
         })
 }
