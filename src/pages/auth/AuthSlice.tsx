@@ -1,10 +1,17 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { sendPassword, signIn, signUp } from 'api/Apis';
-import { getBackdropStart, getBackdropStop } from 'app/BackdropSlice';
-import { AppThunk } from 'app/store';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { sendPassword, signIn, signUp } from 'api/Apis'
+import { getBackdropStart, getBackdropStop } from 'app/BackdropSlice'
+import { AppThunk } from 'app/store'
 // import { roles } from 'app/rolesConfig'
-import { startSnackbar } from 'app/SnackbarSlice';
-import { ISignUpInputState, ISignInInputState, IPasswordInputState, IForgotPasswordInputState, AuthState, ISignInSuccessPayload } from './auth.interfaces';
+import { startSnackbar } from 'app/SnackbarSlice'
+import {
+    ISignUpInputState,
+    ISignInInputState,
+    IPasswordInputState,
+    IForgotPasswordInputState,
+    AuthState,
+    ISignInSuccessPayload,
+} from './auth.interfaces'
 
 const InitialSignUpState: ISignUpInputState = {
     email: '',
@@ -17,14 +24,14 @@ const InitialSignUpState: ISignUpInputState = {
 const InitialSignInState: ISignInInputState = {
     username: '',
     password: '',
-    rememberMe: false
+    rememberMe: false,
 }
 const InitialPasswordState: IPasswordInputState = {
     newpass: '',
     confnewpass: '',
 }
 const InitialForgotPasswordState: IForgotPasswordInputState = {
-    username: ''
+    username: '',
 }
 
 const authInitialState: AuthState = {
@@ -38,7 +45,7 @@ const authInitialState: AuthState = {
     currentSignInInput: InitialSignInState,
     currentSignUpInput: InitialSignUpState,
     currentPasswordInput: InitialPasswordState,
-    currentForgotPasswordInput: InitialForgotPasswordState
+    currentForgotPasswordInput: InitialForgotPasswordState,
 }
 
 function startLoading(state: AuthState) {
@@ -68,7 +75,10 @@ const AuthSlice = createSlice({
                 // state.roles = roles[userType]
             }
         },
-        getSignInSuccess(state: AuthState, { payload }: PayloadAction<ISignInSuccessPayload>) {
+        getSignInSuccess(
+            state: AuthState,
+            { payload }: PayloadAction<ISignInSuccessPayload>
+        ) {
             // console.log(payload)
             const { token, userType, username } = payload.data
             debugger
@@ -80,29 +90,48 @@ const AuthSlice = createSlice({
                 state.username = username
                 //@ts-ignore
                 // state.roles = roles[userType]
-                sessionStorage.setItem('authUser', JSON.stringify({
-                    "token": token,
-                    "userType": userType,
-                    "username": username
-                }));
-                if (state.currentSignInInput.rememberMe) localStorage.setItem('authUser', JSON.stringify({
-                    "token": token,
-                    "userType": userType,
-                    "username": username
-                }));
+                sessionStorage.setItem(
+                    'authUser',
+                    JSON.stringify({
+                        token: token,
+                        userType: userType,
+                        username: username,
+                    })
+                )
+                if (state.currentSignInInput.rememberMe)
+                    localStorage.setItem(
+                        'authUser',
+                        JSON.stringify({
+                            token: token,
+                            userType: userType,
+                            username: username,
+                        })
+                    )
             }
         },
         getAuthFailure: stopLoading,
-        setCurrentSignInInput(state, { payload }: PayloadAction<ISignInInputState>) {
+        setCurrentSignInInput(
+            state,
+            { payload }: PayloadAction<ISignInInputState>
+        ) {
             state.currentSignInInput = payload
         },
-        setCurrentSignUpInput(state, { payload }: PayloadAction<ISignUpInputState>) {
+        setCurrentSignUpInput(
+            state,
+            { payload }: PayloadAction<ISignUpInputState>
+        ) {
             state.currentSignUpInput = payload
         },
-        setCurrentPasswordInput(state, { payload }: PayloadAction<IPasswordInputState>) {
+        setCurrentPasswordInput(
+            state,
+            { payload }: PayloadAction<IPasswordInputState>
+        ) {
             state.currentPasswordInput = payload
         },
-        setCurrentForgotPasswordInput(state, { payload }: PayloadAction<IForgotPasswordInputState>) {
+        setCurrentForgotPasswordInput(
+            state,
+            { payload }: PayloadAction<IForgotPasswordInputState>
+        ) {
             state.currentForgotPasswordInput = payload
         },
         resetSignInInput(state: AuthState) {
@@ -121,8 +150,8 @@ const AuthSlice = createSlice({
             state = authInitialState
 
             // debugger
-        }
-    }
+        },
+    },
 })
 
 export const {
@@ -139,7 +168,7 @@ export const {
     resetSignInInput,
     resetSignUpInput,
     logout,
-    setAuthUser
+    setAuthUser,
 } = AuthSlice.actions
 
 export default AuthSlice.reducer
@@ -148,13 +177,13 @@ export const doLogin = (
     username: string,
     password: string,
     callback?: () => any
-): AppThunk => async dispatch => {
+): AppThunk => async (dispatch) => {
     try {
         dispatch(getAuthStart())
         dispatch(getBackdropStart())
         const response = await signIn(username, password)
         dispatch(getSignInSuccess(response))
-        callback && callback();
+        callback && callback()
         dispatch(getBackdropStop())
     } catch (err) {
         dispatch(getBackdropStop())
@@ -166,13 +195,13 @@ export const resetPassword = (
     newpass: string,
     confnewpass: string,
     callback?: () => any
-): AppThunk => async dispatch => {
+): AppThunk => async (dispatch) => {
     try {
         dispatch(getAuthStart())
         dispatch(getBackdropStart())
         // const response = await signIn(username, password)
         // dispatch(getSignInSuccess(response))
-        callback && callback();
+        callback && callback()
         dispatch(getBackdropStop())
     } catch (err) {
         dispatch(getBackdropStop())
@@ -184,16 +213,20 @@ export const resetPassword = (
 export const handleForgotPassword = (
     username: string,
     callback?: () => any
-): AppThunk => async dispatch => {
+): AppThunk => async (dispatch) => {
     try {
         dispatch(getAuthStart())
         dispatch(getBackdropStart())
-        await sendPassword(username).then(res => {
+        await sendPassword(username).then((res) => {
             debugger
-            dispatch(startSnackbar({ message: res.data.message || 'Password has been sent' }))
+            dispatch(
+                startSnackbar({
+                    message: res.data.message || 'Password has been sent',
+                })
+            )
         })
         // dispatch(getSignInSuccess(response))
-        callback && callback();
+        callback && callback()
         dispatch(getBackdropStop())
     } catch (err) {
         dispatch(getBackdropStop())
@@ -210,14 +243,23 @@ export const doRegister = (
     mobile: number,
     userType?: string,
     callback?: () => any
-): AppThunk => async dispatch => {
+): AppThunk => async (dispatch) => {
     try {
         dispatch(getAuthStart())
         dispatch(getBackdropStart())
-        const response = await signUp(username, password, email, mobile, userType)
-            .catch(err => dispatch(startSnackbar({ message: 'Username or Password is invalid' })))
+        const response = await signUp(
+            username,
+            password,
+            email,
+            mobile,
+            userType
+        ).catch((err) =>
+            dispatch(
+                startSnackbar({ message: 'Username or Password is invalid' })
+            )
+        )
         // dispatch(getSignUpSuccess(response))
-        callback && callback();
+        callback && callback()
         dispatch(getBackdropStop())
     } catch (err) {
         dispatch(getBackdropStop())
@@ -226,13 +268,11 @@ export const doRegister = (
     }
 }
 
-export const outhUser = (
-    user: any
-): AppThunk => async dispatch => {
+export const outhUser = (user: any): AppThunk => async (dispatch) => {
     dispatch(setAuthUser(user))
 }
 
-export const doLogout = (): AppThunk => async dispatch => {
+export const doLogout = (): AppThunk => async (dispatch) => {
     // debugger
     localStorage.removeItem('token')
     sessionStorage.removeItem('authUser')

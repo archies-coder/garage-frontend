@@ -1,15 +1,23 @@
-import React, { FunctionComponent } from 'react';
-import { Box, createStyles, fade, InputBase, InputBaseProps, Paper, Theme } from "@material-ui/core";
+import React, { FunctionComponent } from 'react'
+import {
+    Box,
+    createStyles,
+    fade,
+    InputBase,
+    InputBaseProps,
+    Paper,
+    Theme,
+} from '@material-ui/core'
 // import SearchIcon from "@material-ui/icons/Search";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles'
 
 interface OwnProps extends React.HTMLAttributes<any> {
-    placeholder: string;
-    width?: number;
+    placeholder: string
+    width?: number
     height?: number
 }
 
-type Props = OwnProps & InputBaseProps;
+type Props = OwnProps & InputBaseProps
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -21,12 +29,12 @@ const useStyles = makeStyles((theme: Theme) =>
             '& .MuiInputBase-input::placeholder': {
                 opacity: 1,
                 color: theme.palette.text.primary,
-            }
+            },
         },
         search: {
             position: 'relative',
-            width: (props: Props) => props.width ? props.width : '225px',
-            height: (props: Props) => props.height ? props.height : '40px',
+            width: (props: Props) => (props.width ? props.width : '225px'),
+            height: (props: Props) => (props.height ? props.height : '40px'),
             // height: '40px',
             borderRadius: theme.shape.borderRadius - 5,
             backgroundColor: theme.palette.common.white,
@@ -34,7 +42,6 @@ const useStyles = makeStyles((theme: Theme) =>
             '&:hover': {
                 backgroundColor: theme.palette.common.white,
             },
-
         },
         searchIcon: {
             padding: theme.spacing(0, 1),
@@ -47,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         inputRoot: {
             color: theme.palette.text.primary,
-            width: '100%'
+            width: '100%',
         },
         inputInput: {
             // padding: theme.spacing(2, 2, 2, 2),
@@ -60,7 +67,6 @@ const useStyles = makeStyles((theme: Theme) =>
             paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
             // transition: theme.transitions.create('width'),
             height: '100%',
-
         },
     })
 )
@@ -88,7 +94,7 @@ const SearchInput: FunctionComponent<Props> = (props) => {
                 </div>
             </div>
         </Box>
-    );
-};
+    )
+}
 
-export default SearchInput;
+export default SearchInput

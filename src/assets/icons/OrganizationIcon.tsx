@@ -1,19 +1,21 @@
-import React, {FunctionComponent} from 'react';
-import {SvgIcon} from "@material-ui/core";
-import { ReactComponent as UserIcon } from "./user.svg";
+import React, { FunctionComponent } from 'react'
+import { SvgIcon } from '@material-ui/core'
+import { ReactComponent as UserIcon } from './user.svg'
 
 interface OwnProps {
-    className: string;
+    className: string
 }
 
-type Props = OwnProps;
+type Props = OwnProps
 
 const OrganizationIcon: FunctionComponent<Props> = (props) => {
-
     return (
-        <SvgIcon {...props} component={UserIcon} viewBox="-5 -5 100 100">
-        </SvgIcon>
+        <SvgIcon
+            {...props}
+            component={UserIcon}
+            viewBox="-5 -5 100 100"
+        ></SvgIcon>
     )
-};
+}
 
-export default OrganizationIcon;
+export default OrganizationIcon

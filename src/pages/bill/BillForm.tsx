@@ -13,47 +13,21 @@ import { ArrowBackIos } from '@material-ui/icons'
 import { RootState } from 'app/store'
 import CustomButton from 'components/inputs/Button'
 import TextInput from 'components/inputs/TextInput'
-import { IVehicleEntry } from 'models/vehicleEntry.model'
+import { ISingleVehicleEntry, IVehicleEntry } from 'models/vehicleEntry.model'
 import { fetchVehicleEntries } from 'pages/home/HomeSlice'
 import * as React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
 import theme from 'theme'
-import { addNewBillItem, addNewSparePart, setCurrentBill } from './BillSlice'
+import { useBillFormStyles } from './BillFormStyles'
+import {
+    addNewBillItem,
+    addNewSparePart,
+    setCurrentBill,
+    setCurrentVehicleEntry,
+} from './BillSlice'
 
 export interface IBillFormProps extends RouteComponentProps<any> {}
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        paper: {
-            backgroundColor: '#E7ECF6',
-            borderRadius: theme.shape.borderRadius - 5,
-            marginRight: 20,
-            paddingTop: 20,
-            paddingBottom: 20,
-            height: '100%',
-        },
-        button: {},
-        header: {
-            fontSize: '20px',
-            fontWeight: 'bold',
-            padding: theme.spacing(2, 0, 0, 4),
-            color: theme.palette.text.primary,
-        },
-        headerSecondary: {
-            fontSize: '18.75px',
-            fontWeight: 'bold',
-            padding: theme.spacing(0, 0, 2, 0),
-            marginBottom: 16,
-            color: theme.palette.text.primary,
-        },
-        arrowBack: {
-            height: '16px',
-            // verticalAlign: 'bottom',
-            cursor: 'pointer',
-        },
-    })
-)
 
 const inputStyle = {
     width: 446,
@@ -61,17 +35,21 @@ const inputStyle = {
 }
 
 export default function BillForm(props: IBillFormProps) {
-    const classes = useStyles()
-    const [vehicleEntry, setVehicleEntry] = React.useState<IVehicleEntry>({})
+    const classes = useBillFormStyles()
+    const [vehicleEntry, setVehicleEntry] = React.useState<
+        ISingleVehicleEntry | Record<string, never>
+    >({})
 
     const dispatch = useDispatch()
 
     const { VehicleEntriesById } = useSelector(
         (state: RootState) => state.VehicleEntries
     )
-    const { currentBill, currentBillSpareParts } = useSelector(
-        (state: RootState) => state.bills
-    )
+    const {
+        currentBill,
+        currentBillSpareParts,
+        currentVehicleEntry,
+    } = useSelector((state: RootState) => state.bills)
 
     const handleInputChange = (event: any) => {
         const name: string = event.target.name.split('-')[0]
@@ -109,12 +87,14 @@ export default function BillForm(props: IBillFormProps) {
     }, [dispatch])
 
     React.useEffect(() => {
+        dispatch(setCurrentVehicleEntry(VehicleEntriesById[vehicleEntryId]))
         if (vehicleEntryId) {
             console.log(vehicleEntry)
             setVehicleEntry(VehicleEntriesById[vehicleEntryId])
             console.log(vehicleEntry)
         }
     }, [VehicleEntriesById])
+
     return (
         <Grid item xs={12}>
             <Paper className={classes.paper}>
@@ -136,7 +116,11 @@ export default function BillForm(props: IBillFormProps) {
                                 style={inputStyle}
                                 label={'vehicle number'}
                                 name="vehicleNo"
-                                // value={}
+                                value={
+                                    currentVehicleEntry
+                                        ? currentVehicleEntry.vehicleNo
+                                        : ''
+                                }
                             />
                         </Box>
                     </Grid>

@@ -1,3 +1,5 @@
+import { ISingleVehicleEntry } from './../../models/vehicleEntry.model'
+import { IVehicleEntryObject } from './../../api/vehicleEntry.api'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { createBill, getBillsData } from 'api/bill.api'
 import { getBackdropStart, getBackdropStop } from 'app/BackdropSlice'
@@ -54,6 +56,7 @@ interface BillState {
     pageLinks: Links | null
     isLoading: boolean
     error: string | null
+    currentVehicleEntry: ISingleVehicleEntry | Record<string, never>
     currentBill: IBillInputState
     currentBillSpareParts: IBillSparePartInputState
 }
@@ -66,6 +69,7 @@ const billsInitialState: BillState = {
     pageLinks: {},
     isLoading: false,
     error: null,
+    currentVehicleEntry: {},
     currentBill: defaultBillInputState,
     currentBillSpareParts: defaultSparePartsInputState,
 }
@@ -94,6 +98,12 @@ const bills = createSlice({
             state.bills.map((bill) => (state.billsById[bill._id] = bill))
         },
         getBillsFailure: loadingFailed,
+        setCurrentVehicleEntry(
+            state,
+            { payload }: PayloadAction<ISingleVehicleEntry>
+        ) {
+            state.currentVehicleEntry = payload
+        },
         setCurrentBill(state, { payload }: PayloadAction<any>) {
             state.currentBill = payload
         },
@@ -123,6 +133,7 @@ export const {
     getBillsStart,
     getBillsSuccess,
     getBillsFailure,
+    setCurrentVehicleEntry,
     setCurrentBill,
     addNewBillItem,
     setCurrentBillSpareParts,

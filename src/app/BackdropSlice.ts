@@ -1,11 +1,11 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface BackdropState {
-    mask: boolean;
+    mask: boolean
 }
 
 const backdropInitialState: BackdropState = {
-    mask: false
+    mask: false,
 }
 
 function startLoading(state: BackdropState) {
@@ -21,12 +21,9 @@ const BackDropSlice = createSlice({
     reducers: {
         getBackdropStart: startLoading,
         getBackdropStop: stopLoading,
-    }
+    },
 })
 
-export const {
-    getBackdropStart,
-    getBackdropStop
-} = BackDropSlice.actions
+export const { getBackdropStart, getBackdropStop } = BackDropSlice.actions
 
 export default BackDropSlice.reducer

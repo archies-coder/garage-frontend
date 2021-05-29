@@ -3,7 +3,7 @@ import counterReducer from 'pages/counter/counterSlice'
 import rootReducer from './rootReducer'
 
 export const store = configureStore({
-    reducer: rootReducer
+    reducer: rootReducer,
 })
 
 export type AppDispatch = typeof store.dispatch

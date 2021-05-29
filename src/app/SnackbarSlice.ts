@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface SnackbarState {
-    open: boolean,
-    message: string,
-    vertical: string,
-    horizontal: string,
+    open: boolean
+    message: string
+    vertical: string
+    horizontal: string
 }
 
 const snackbarInitialState: SnackbarState = {
@@ -20,19 +20,16 @@ const SnackbarSlice = createSlice({
     reducers: {
         startSnackbar(state: SnackbarState, { payload }: PayloadAction<any>) {
             debugger
-            const {message} = payload
+            const { message } = payload
             state.open = true
             state.message = message
         },
         stopSnackbar(state: SnackbarState) {
             state.open = false
-        }
-    }
+        },
+    },
 })
 
-export const {
-    startSnackbar,
-    stopSnackbar
-} = SnackbarSlice.actions
+export const { startSnackbar, stopSnackbar } = SnackbarSlice.actions
 
 export default SnackbarSlice.reducer

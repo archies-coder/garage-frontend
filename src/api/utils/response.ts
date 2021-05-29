@@ -1,4 +1,4 @@
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from 'axios'
 
 export function handleResponse(response: AxiosResponse) {
     // if (response.results) {
@@ -6,15 +6,15 @@ export function handleResponse(response: AxiosResponse) {
     // }
 
     if (response.data) {
-        return response.data;
+        return response.data
     }
 
-    return response;
+    return response
 }
 
 export function handleError(error: AxiosResponse) {
     if (error.data) {
-        return error.data;
+        return error.data
     }
-    return error;
+    return error
 }

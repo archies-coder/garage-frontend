@@ -8,6 +8,8 @@ import {
     Snackbar,
     Theme,
 } from '@material-ui/core'
+import { cleanup } from '@testing-library/react'
+import { apis } from 'api/Apis'
 import NavGridContainer from 'layouts/navbar/NavGridContainer'
 import SidebarView from 'layouts/sidebar/SidebarView'
 import { setAuthUser } from 'pages/auth/AuthSlice'
@@ -80,6 +82,10 @@ export default function App(props: Props) {
             //return <Redirect to="/signin" />
         }
     }
+
+    React.useEffect(() => {
+        apis.get('/').then((res) => console.log(res))
+    }, [])
 
     return (
         <Grid container className={classes.root}>

@@ -1,21 +1,21 @@
-import { createStyles, MenuItem, Select, Theme } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { createStyles, MenuItem, Select, Theme } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 // import { ExpandMore } from '@material-ui/icons';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react'
 
 interface IMenuOptions {
-    title: string;
+    title: string
 }
 
 interface OwnProps extends React.HTMLAttributes<any> {
-    value: string;
-    padding?: number;
-    menuOptions?: IMenuOptions[];
+    value: string
+    padding?: number
+    menuOptions?: IMenuOptions[]
     width?: number
     height?: number
 }
 
-type Props = OwnProps;
+type Props = OwnProps
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         left: 15,
         alignItems: 'center',
         // paddingTop: 25,
-        textAlign: "justify",
+        textAlign: 'justify',
         color: theme.palette.text.primary,
         borderRadius: theme.shape.borderRadius - 5,
     },
@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             backgroundColor: theme.palette.common.white,
             borderRadius: theme.shape.borderRadius - 5,
         },
-        width: (props: any) => props.width ? `${props.width}px` : 135,
+        width: (props: any) => (props.width ? `${props.width}px` : 135),
         // height: (props: any) => props.height ? `${props.height}px` : 38,
         lineHeight: 2.5,
         //height: 40,
@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             position: 'absolute',
             top: '7px',
             right: '15px',
-        }
+        },
     },
     inputRoot: {
         // color: '#000',
@@ -117,23 +117,22 @@ const useStyles = makeStyles((theme: Theme) => ({
         //     backgroundColor: theme.palette.common.white,
         // },
     },
-
 }))
 
-const useMenuStyles = makeStyles((theme: Theme) => createStyles({
-    root: {
-        backgroundColor: theme.palette.common.white,
-        padding: theme.spacing(0.5, 1),
-        fontSize: '11.25px',
-    },
-    selected: {
-        backgroundColor: theme.palette.common.white,
-        padding: theme.spacing(0.5, 1),
-        fontSize: '11.25px',
-    },
-
-}
-))
+const useMenuStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            backgroundColor: theme.palette.common.white,
+            padding: theme.spacing(0.5, 1),
+            fontSize: '11.25px',
+        },
+        selected: {
+            backgroundColor: theme.palette.common.white,
+            padding: theme.spacing(0.5, 1),
+            fontSize: '11.25px',
+        },
+    })
+)
 
 const SelectInput: FunctionComponent<Props> = (props) => {
     const classes = useStyles(props)
@@ -161,36 +160,46 @@ const SelectInput: FunctionComponent<Props> = (props) => {
                     style={{
                         borderBottom: 'none',
                         // padding: '12px',
-                        width: '100%'
+                        width: '100%',
                     }}
                     MenuProps={{
                         anchorOrigin: {
-                            vertical: "bottom",
-                            horizontal: "right"
+                            vertical: 'bottom',
+                            horizontal: 'right',
                         },
                         transformOrigin: {
-                            vertical: "top",
-                            horizontal: "right"
+                            vertical: 'top',
+                            horizontal: 'right',
                         },
                         getContentAnchorEl: null,
                         PopoverClasses: {
                             //paper: menuClasses.menuPapaer,
                             //root: menuClasses.menuRoot
-                        }
+                        },
                     }}
                 >
-                    {
-                        props.menuOptions ? [<MenuItem classes={menuClasses} key={0} value="">
-                            {props.defaultValue}
-                        </MenuItem>, ...props.menuOptions.map(item => <MenuItem classes={menuClasses}
-                            value={item.title}
-                            key={item.title}
-                        >{item.title}</MenuItem>)] : <MenuItem>1</MenuItem>
-                    }
+                    {props.menuOptions ? (
+                        [
+                            <MenuItem classes={menuClasses} key={0} value="">
+                                {props.defaultValue}
+                            </MenuItem>,
+                            ...props.menuOptions.map((item) => (
+                                <MenuItem
+                                    classes={menuClasses}
+                                    value={item.title}
+                                    key={item.title}
+                                >
+                                    {item.title}
+                                </MenuItem>
+                            )),
+                        ]
+                    ) : (
+                        <MenuItem>1</MenuItem>
+                    )}
                 </Select>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default SelectInput;
+export default SelectInput

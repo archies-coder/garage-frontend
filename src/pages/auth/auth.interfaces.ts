@@ -1,4 +1,3 @@
-
 export interface ISignInInputState {
     username: string
     password: string
