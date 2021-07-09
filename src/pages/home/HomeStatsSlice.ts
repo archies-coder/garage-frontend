@@ -80,13 +80,13 @@ export const fetchHomeStats = (selectedDate?: string): AppThunk => async (
 ) => {
     try {
         dispatch(getHomeStatsStart())
-        dispatch(getBackdropStart())
+        // dispatch(getBackdropStart())
         const { data } = await getStats(
             selectedDate ? selectedDate : new Date().toISOString()
         )
         debugger
         dispatch(getHomeStatsSuccess(data))
-        dispatch(getBackdropStop())
+        // dispatch(getBackdropStop())
     } catch (err) {
         dispatch(getHomeStatsFailure(err.toString()))
     }

@@ -19,23 +19,13 @@ import {
     withStyles,
 } from '@material-ui/core'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
-import {
-    KeyboardArrowLeft,
-    KeyboardArrowRight,
-    LastPage as LastPageIcon,
-    FirstPage as FirstPageIcon,
-} from '@material-ui/icons'
-// import {
-//     FirstPage as FirstPageIcon,
-//     KeyboardArrowLeft,
-//     KeyboardArrowRight,
-//     LastPage as LastPageIcon
-// } from "@material-ui/icons";
+
 // import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import { Skeleton } from '@material-ui/lab'
 import { format } from 'date-fns'
 import React, { FunctionComponent, useState } from 'react'
+import TablePaginationActions from './TablePaginationActions'
 
 interface IRowProps {
     [id: string]: any
@@ -73,104 +63,6 @@ interface IConfigObject {
 
 interface OwnProps extends React.HTMLAttributes<any> {
     config: IConfigObject
-}
-
-const useStyles1 = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            flexShrink: 0,
-            marginLeft: theme.spacing(2.5),
-        },
-    })
-)
-
-function TablePaginationActions(props: TablePaginationActionsProps) {
-    const classes = useStyles1()
-    const theme = useTheme()
-    const { count, page, rowsPerPage, onChangePage } = props
-
-    const handleFirstPageButtonClick = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-        onChangePage(event, 0)
-    }
-
-    const handleBackButtonClick = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-        onChangePage(event, page - 1)
-    }
-
-    const handleNextButtonClick = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-        onChangePage(event, page + 1)
-    }
-
-    const handleLastPageButtonClick = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-        onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1))
-    }
-
-    return (
-        <div className={classes.root}>
-            <IconButton
-                onClick={handleFirstPageButtonClick}
-                disabled={page === 0}
-                aria-label="first page"
-            >
-                {theme.direction === 'rtl' ? (
-                    <LastPageIcon />
-                ) : (
-                    <FirstPageIcon />
-                )}
-            </IconButton>
-            <IconButton
-                onClick={handleBackButtonClick}
-                disabled={page === 0}
-                aria-label="previous page"
-            >
-                {theme.direction === 'rtl' ? (
-                    <KeyboardArrowRight />
-                ) : (
-                    <KeyboardArrowLeft />
-                )}
-            </IconButton>
-            <IconButton
-                onClick={handleNextButtonClick}
-                disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                aria-label="next page"
-            >
-                {theme.direction === 'rtl' ? (
-                    <KeyboardArrowLeft />
-                ) : (
-                    <KeyboardArrowRight />
-                )}
-            </IconButton>
-            <IconButton
-                onClick={handleLastPageButtonClick}
-                disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                aria-label="last page"
-            >
-                {theme.direction === 'rtl' ? (
-                    <FirstPageIcon />
-                ) : (
-                    <LastPageIcon />
-                )}
-            </IconButton>
-        </div>
-    )
-}
-
-interface TablePaginationActionsProps {
-    count: number
-    page: number
-    rowsPerPage: number
-    onChangePage: (
-        event: React.MouseEvent<HTMLButtonElement>,
-        newPage: number
-    ) => void
 }
 
 type Props = OwnProps
@@ -319,11 +211,13 @@ export const TableWrapper: FunctionComponent<Props> = ({
     const [rowsPerPage, setRowsPerPage] = React.useState(10)
     const [order, setOrder] = React.useState<Order>('asc')
     const [orderBy, setOrderBy] = React.useState<string>('id')
+
     const rows = [...config.data]
     const columns = [...config.columns]
     const menuOptions = config.menuOptions ? [...config.menuOptions] : null
     const pageChange = config.pageChange
     const totalCount = config.totalCount || rows.length
+
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
         property: string
@@ -453,6 +347,7 @@ export const TableWrapper: FunctionComponent<Props> = ({
               page * rowsPerPage + rowsPerPage
           )
         : rows
+
     const body = (
         <TableBody>
             {tableRows.map((row: any, i: number) => (

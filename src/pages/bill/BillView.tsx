@@ -8,7 +8,7 @@ import SearchInput from 'components/inputs/SearchInput'
 import React, { FunctionComponent, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
-import TableWrapper from '../../components/TableWrapper'
+import TableWrapper from '../../components/table/TableWrapper'
 import { fetchBills } from './BillSlice'
 
 interface OwnProps extends RouteComponentProps<any> {}

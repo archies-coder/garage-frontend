@@ -8,6 +8,7 @@ import VehicleReducer from 'pages/home/HomeSlice'
 import SparePartReducer from 'pages/spare-part/SparePartSlice'
 import BillReducer from 'pages/bill/BillSlice'
 import HomeStatsReducer from 'pages/home/HomeStatsSlice'
+import EditableTableReducer from 'components/table/editableTableSlice'
 
 const rootReducer = combineReducers({
     // dummy: dummyReducer
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
     spareParts: SparePartReducer,
     bills: BillReducer,
     homeStats: HomeStatsReducer,
+    editableTable: EditableTableReducer,
 })
 
 // export type RootState = ReturnType<typeof rootReducer>

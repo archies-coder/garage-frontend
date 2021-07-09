@@ -21,6 +21,7 @@
         "axios": "^0.20.0",
         "chart.js": "2.9",
         "date-fns": "^2.20.3",
+        "miragejs": "^0.1.41",
         "parse-link-header": "^1.0.1",
         "react": "^17.0.2",
         "react-chartjs-2": "^2.10.0",

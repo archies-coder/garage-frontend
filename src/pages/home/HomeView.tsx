@@ -1,4 +1,3 @@
-import classes from '*.module.css'
 import {
     Avatar,
     Box,
@@ -13,14 +12,15 @@ import { RootState } from 'app/store'
 import MyChart2 from 'components/Chart'
 import { CustomMenuItem } from 'components/CustomMenuItem'
 import SearchInput from 'components/inputs/SearchInput'
-import CustomizedSwitch from 'components/Switch'
-import TableWrapper from 'components/TableWrapper'
+import EditableTable from 'components/table/EditableTable'
+import TableWrapper from 'components/table/TableWrapper'
 import * as React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import HomeDateDropdown from './HomeDateDropdown'
 import { disableSaveButton, doCheckOut, fetchVehicleEntries } from './HomeSlice'
 import HomeStats from './HomeStats'
 import { fetchHomeStats } from './HomeStatsSlice'
+import { TableConfig } from './tableConfig'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -95,49 +95,6 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 )
 
-const columns = [
-    {
-        id: 'vehicleImagePath',
-        label: '',
-    },
-    // {
-    //     id: '_id',
-    //     label: 'Check-in Id',
-    // },
-    {
-        id: 'vehicleModel',
-        label: 'Vehicle Model',
-    },
-    {
-        id: 'vehicleNo',
-        label: 'Vehicle Number',
-    },
-    {
-        id: 'customerName',
-        label: 'Name',
-    },
-    {
-        id: 'customerMobile',
-        label: 'Mobile No',
-    },
-    {
-        id: 'purpose',
-        label: 'Purpose',
-    },
-    {
-        id: 'intime',
-        label: 'In Time',
-        isSort: true,
-        isDate: true,
-    },
-    {
-        id: 'outime',
-        label: 'Out Time',
-        isSort: true,
-        isDate: true,
-    },
-]
-
 interface Props {}
 
 const homeStatsConfig = {
@@ -161,10 +118,10 @@ const HomeView: React.FC<Props> = (props) => {
     }, [dispatch])
 
     const {
-        VehicleEntries: vehicleEntries,
-        isLoading: isLoadingVehicleEntries,
         pageCount,
         pageLinks,
+        VehicleEntries: vehicleEntries,
+        isLoading,
     } = useSelector((state: RootState) => state.VehicleEntries)
 
     const { vehicleEntriestats } = useSelector(
@@ -175,77 +132,16 @@ const HomeView: React.FC<Props> = (props) => {
         dispatch(doCheckOut(id, () => dispatch(fetchVehicleEntries())))
     }
 
-    const TableConfig = {
-        columns: columns,
-        isLoading: isLoadingVehicleEntries,
-        data: vehicleEntries.map((el) => {
-            console.log(el)
-            return {
-                ...el,
-                //@ts-ignore
-                //hideMenu: !!el.checkOutBy,
-                //@ts-ignore
-                // checked_out: !!el.checkOutBy,
-                vehicleImagePath: <Avatar src={el.vehicleImagePath} />,
-            }
-        }),
-        pagination: true,
-        pageChange: (page: number, count: number) => {
-            // const {
-            //     purpose: purpose1,
-            //     site: site1,
-            //     vehicle: vehicle1
-            // } = filter
-            // // setRowPerPage(count)
-            // //dispatch(fetchVisitors(page, count, vehicle1, purpose1, site1))
-            // doFetch(page, count, vehicle1, purpose1, site1)
-        },
+    const tableConfig = TableConfig({
+        isLoading,
+        vehicleEntries,
         totalCount: pageCount,
-        menuOptions: [
-            {
-                key: '_id',
-                hideMenu: (row: any) => {
-                    return row.checked_out
-                },
-                // callback: handleCheckOut,
-                item: (id: string) => {
-                    return (
-                        <CustomMenuItem
-                            onClick={() => handleCheckOut(id)}
-                            to="/"
-                        >
-                            Check Out
-                        </CustomMenuItem>
-                    )
-                },
-            },
-            {
-                key: '_id',
-                item: (id: any) => (
-                    <CustomMenuItem
-                        to={'/vehicle/' + id}
-                        onClick={() => dispatch(disableSaveButton())}
-                    >
-                        View Details
-                    </CustomMenuItem>
-                ),
-            },
-            {
-                key: '_id',
-                item: (id: any) => (
-                    <CustomMenuItem
-                        to={'/bills/add/' + id}
-                        onClick={() => dispatch(disableSaveButton())}
-                    >
-                        Bill
-                    </CustomMenuItem>
-                ),
-            },
-        ],
-    }
+        handleCheckOut,
+        dispatchDisableSaveButton: () => dispatch(disableSaveButton()),
+    })
 
     return (
-        <Grid item>
+        <Grid item xs={12} style={{ marginRight: '30px' }}>
             <Grid container>
                 <Grid item xs={12} style={{ height: '20%', marginTop: 0 }}>
                     <Paper className={classes.paper} elevation={0}>
@@ -319,13 +215,13 @@ const HomeView: React.FC<Props> = (props) => {
                                 }} variant="contained" style={{ marginTop: '33px', marginLeft: '27px', height: '40px' }}
                             >Clear Filter</Button> */}
                                 </Box>
-                                <TableWrapper
+                                <EditableTable
                                     style={{
                                         marginTop: '17px',
                                         marginLeft: '32px',
                                         marginRight: '30px',
                                     }}
-                                    config={TableConfig}
+                                    config={tableConfig}
                                 />
                             </Paper>
                         </Grid>
