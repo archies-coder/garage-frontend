@@ -5,6 +5,18 @@ import { handleError, handleResponse } from './response'
 export const BASE_URL =
     process.env.REACT_APP_SERVER_URL || 'http://localhost:8000/garage/v1.0'
 
+export interface IApiProvider {
+    getAll: <T = void>(
+        resource: string,
+        params?: IParamObject[] | undefined
+    ) => Promise<T>
+    getSingle: <T = void>(resource: string, id: string) => Promise<T>
+    post: <T = void>(resource: string, model: any) => Promise<T | any>
+    put: (resource: string, model: string) => Promise<any>
+    patch: (resource: string, model: string) => Promise<any>
+    remove: (resource: string, id: string) => Promise<any>
+}
+
 interface IParamObject {
     name: string
     value: string
@@ -38,7 +50,7 @@ async function getSingle<T = void>(resource: string, id: string): Promise<T> {
         .catch(handleError)
 }
 
-async function post(resource: string, model: any) {
+async function post<T = void>(resource: string, model: any): Promise<T | any> {
     return await apis
         .post(`${BASE_URL}/${resource}`, model)
         .then(handleResponse)
@@ -66,7 +78,7 @@ async function remove(resource: string, id: string) {
         .catch(handleError)
 }
 
-export const apiProvider = {
+export const apiProvider: IApiProvider = {
     getAll,
     getSingle,
     post,

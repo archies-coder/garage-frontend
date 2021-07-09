@@ -1,7 +1,9 @@
+import { IBillResponse } from './../../api/bill.api'
 import { ISingleVehicleEntry } from './../../models/vehicleEntry.model'
 import { IVehicleEntryObject } from './../../api/vehicleEntry.api'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { createBill, getBillsData } from 'api/bill.api'
+import Api from '../../api'
 import { getBackdropStart, getBackdropStop } from 'app/BackdropSlice'
 import { startSnackbar } from 'app/SnackbarSlice'
 import { AppThunk } from 'app/store'
@@ -94,7 +96,6 @@ const bills = createSlice({
             state.isLoading = false
             state.error = null
             state.bills = data
-            // @ts-ignore
             state.bills.map((bill) => (state.billsById[bill._id] = bill))
         },
         getBillsFailure: loadingFailed,
@@ -147,7 +148,7 @@ export const fetchBills = (page?: number, count?: number): AppThunk => async (
 ) => {
     try {
         dispatch(getBillsStart())
-        const bills = await getBillsData(page, count)
+        const bills = await Api.bill().getAll<IBillResponse>(page, count)
 
         dispatch(getBillsSuccess(bills))
     } catch (err) {
@@ -161,7 +162,8 @@ export const saveBill = (
 ): AppThunk => async (dispatch) => {
     try {
         dispatch(getBackdropStart())
-        await createBill(bill)
+        await Api.bill()
+            .create(bill)
             .then((data) => {
                 console.log(data.response)
                 dispatch(getBackdropStop())
