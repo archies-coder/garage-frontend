@@ -8,7 +8,6 @@ import { fetchVehicleEntries } from 'pages/home/HomeSlice'
 import * as React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
-import { useBillFormStyles } from './BillFormStyles'
 import {
     defaultBill,
     saveBill,
@@ -16,8 +15,9 @@ import {
     setCurrentVehicleEntry,
 } from './BillSlice'
 import EditableTable from '../../components/table/EditableTable'
-import TableConfig from './BillTableConfig'
+import TableConfig from './table/billFormTableConfig'
 import { setEditId } from 'components/table/editableTableSlice'
+import useBillFormStyles from './styles/billFormStyles'
 
 export interface IBillFormProps extends RouteComponentProps<any> {}
 
