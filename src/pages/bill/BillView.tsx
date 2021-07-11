@@ -5,6 +5,7 @@ import { RootState } from 'app/store'
 import { CustomMenuItem } from 'components/CustomMenuItem'
 import CustomButton from 'components/inputs/Button'
 import SearchInput from 'components/inputs/SearchInput'
+import { fetchAllVehicles, fetchVehicleEntries } from 'pages/home/HomeSlice'
 import React, { FunctionComponent, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
@@ -55,7 +56,7 @@ const columns = [
     },
     {
         id: 'vehicleEntryId',
-        label: 'Vehicle Entry Id',
+        label: 'Vehicle Number',
     },
     {
         id: 'createdAt',
@@ -90,10 +91,17 @@ const BillView: FunctionComponent<Props> = (props) => {
         (state: RootState) => state.bills
     )
 
+    const { VehicleEntriesById, VehiclesById } = useSelector(
+        (state: RootState) => state.VehicleEntries
+    )
+
     const TableConfig = {
         columns: columns,
         isLoading: isLoading,
-        data: bills,
+        data: bills.map((b) => ({
+            ...b,
+            vehicleEntryId: VehicleEntriesById[b.vehicleEntryId].vehicleNo,
+        })),
         pagination: true,
         pageChange: (page: number, count: number) => {
             dispatch(fetchBills(page, count))
@@ -117,6 +125,8 @@ const BillView: FunctionComponent<Props> = (props) => {
     }
 
     useEffect(() => {
+        dispatch(fetchAllVehicles())
+        dispatch(fetchVehicleEntries())
         dispatch(fetchBills(0, 10))
     }, [dispatch])
 

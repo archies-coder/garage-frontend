@@ -1,8 +1,10 @@
-export interface IBillInput {
+interface IBillEntry {
     name: string
     cost: number
-    createdAt: string
-    updatedAt: string
+}
+
+export interface IBillInput {
+    items: Array<IBillEntry>
     vehicleEntryId: number
 }
 

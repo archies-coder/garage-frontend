@@ -33,7 +33,10 @@ export default function createBillApi({
             getById: (id: string | number) => getSingle(single, id.toString()),
             getAll: <T = void>(page = 0, count = 0, vehicle = '') =>
                 getAll<T>(plural),
-            create: (bill: IBillInput) => post(single, bill),
+            create: async (bill: IBillInput) => {
+                debugger
+                return await post(single, bill)
+            },
         }),
     }
 }

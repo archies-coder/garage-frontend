@@ -17,18 +17,18 @@ import {
     Theme,
     withStyles,
 } from '@material-ui/core'
-import {makeStyles} from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 // import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
-import {Skeleton} from '@material-ui/lab'
-import {RootState} from 'app/store'
+import { Skeleton } from '@material-ui/lab'
+import { RootState } from 'app/store'
 import TextInput from 'components/inputs/TextInput'
-import {format} from 'date-fns'
-import React, {FunctionComponent, useEffect, useState} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
-import {setEditId, setMenuId} from './editableTableSlice'
+import { format } from 'date-fns'
+import React, { FunctionComponent, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setEditId, setMenuId } from './editableTableSlice'
 import TablePaginationActions from './TablePaginationActions'
-import CustomButton from "../inputs/Button";
+import CustomButton from '../inputs/Button'
 
 interface IRowProps {
     [id: string]: any
@@ -375,16 +375,6 @@ const EditableTable: FunctionComponent<Props> = ({ config, ...props }) => {
                     value={config.data[dataIndex][col.id] || ''}
                     onChange={(e: any) => {
                         editHandler(row.id, e)
-                        // const temp = [...data]
-                        // const temp = data.map((d, i) => {
-                        //     if (i === dataIndex) {
-                        //         return Object.assign({}, d, {
-                        //             [e.target.name]: e.target.value,
-                        //         })
-                        //     }
-                        //     return d
-                        // })
-                        // setData(temp)
                     }}
                 />
             ) : (
@@ -406,9 +396,16 @@ const EditableTable: FunctionComponent<Props> = ({ config, ...props }) => {
                             {printCell(row, col)}
                         </TableCell>
                     ))}
-                    {row.id === editId && <TableCell key={row.id + '-' + 'ok'}>
-                      <CustomButton style={{height: 40, width: 20}} onClick={() => dispatch(setEditId(null))}>Ok</CustomButton>
-                    </TableCell>}
+                    {row.id === editId && (
+                        <TableCell key={row.id + '-' + 'ok'}>
+                            <CustomButton
+                                style={{ height: 40, width: 20 }}
+                                onClick={() => dispatch(setEditId(null))}
+                            >
+                                Ok
+                            </CustomButton>
+                        </TableCell>
+                    )}
                     {menuOptions && (
                         <TableCell
                             key={i + '-c'}

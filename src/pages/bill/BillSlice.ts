@@ -160,6 +160,7 @@ export const saveBill = (
     callback?: () => void
 ): AppThunk => async (dispatch) => {
     try {
+        debugger
         dispatch(getBackdropStart())
         await Api.bill()
             .create(bill)
