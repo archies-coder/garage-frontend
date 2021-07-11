@@ -43,7 +43,6 @@ export const defaultSparePart = {
 
 export const defaultBillInputState: IBillInputState = {
     0: defaultBill,
-    1: defaultBill,
 }
 export const defaultSparePartsInputState: IBillSparePartInputState = {
     0: defaultSparePart,

@@ -2,7 +2,6 @@ import {
     Box,
     Button,
     createStyles,
-    IconButton,
     Menu,
     MenuItem,
     MenuProps,
@@ -18,18 +17,18 @@ import {
     Theme,
     withStyles,
 } from '@material-ui/core'
-import { makeStyles, useTheme } from '@material-ui/core/styles'
-
+import {makeStyles} from '@material-ui/core/styles'
 // import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
-import { Skeleton } from '@material-ui/lab'
-import { RootState } from 'app/store'
+import {Skeleton} from '@material-ui/lab'
+import {RootState} from 'app/store'
 import TextInput from 'components/inputs/TextInput'
-import { format } from 'date-fns'
-import React, { FunctionComponent, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { setData, setMenuId } from './editableTableSlice'
+import {format} from 'date-fns'
+import React, {FunctionComponent, useEffect, useState} from 'react'
+import {useDispatch, useSelector} from 'react-redux'
+import {setEditId, setMenuId} from './editableTableSlice'
 import TablePaginationActions from './TablePaginationActions'
+import CustomButton from "../inputs/Button";
 
 interface IRowProps {
     [id: string]: any
@@ -63,6 +62,7 @@ interface IConfigObject {
     pagination?: boolean
     pageChange?: any
     totalCount?: number
+    editHandler?: any
 }
 
 interface OwnProps extends React.HTMLAttributes<any> {
@@ -212,11 +212,14 @@ const EditableTable: FunctionComponent<Props> = ({ config, ...props }) => {
     const [order, setOrder] = React.useState<Order>('asc')
     const [orderBy, setOrderBy] = React.useState<string>('id')
 
+    const [data, setData] = React.useState<any[]>([])
+
     const rows = [...config.data]
     const columns = [...config.columns]
     const menuOptions = config.menuOptions ? [...config.menuOptions] : null
     const pageChange = config.pageChange
     const totalCount = config.totalCount || rows.length
+    const editHandler = config.editHandler
 
     const dispatch = useDispatch()
 
@@ -266,11 +269,11 @@ const EditableTable: FunctionComponent<Props> = ({ config, ...props }) => {
         return date ? format(new Date(date), 'MMM dd, HH:mm a').toString() : ''
     }
 
-    // useEffect(() => {
-    //     if (config.data && config.data.length > 0) {
-    //         dispatch(setData(config.data))
-    //     }
-    // }, [dispatch, config.data])
+    useEffect(() => {
+        if (config.data && config.data.length > 0) {
+            setData(config.data)
+        }
+    }, [config.data])
 
     const TableHeader = (
         <TableHead className={classes.header}>
@@ -351,25 +354,41 @@ const EditableTable: FunctionComponent<Props> = ({ config, ...props }) => {
     )
     const tableRows = pageChange
         ? rowsPerPage > 0
-            ? stableSort(rows, getComparator(order, orderBy))
-            : rows
+            ? stableSort(data, getComparator(order, orderBy))
+            : data
         : rowsPerPage > 0
-        ? stableSort(rows, getComparator(order, orderBy)).slice(
+        ? stableSort(data, getComparator(order, orderBy)).slice(
               page * rowsPerPage,
               page * rowsPerPage + rowsPerPage
           )
-        : rows
+        : data
 
     const printCell = (row: any, col: any) => {
-        console.log(row.id)
+        // debugger
         if (editId === row.id) {
-            return (
+            const dataIndex = config.data.findIndex((r) => r.id === row.id)
+            return col.editable ? (
                 <TextInput
-                    // style={inputStyle}
+                    style={{ marginTop: 10 }}
                     label={col.label}
-                    name="vehicleNo"
-                    value={row[col.id]}
+                    name={col.id}
+                    value={config.data[dataIndex][col.id] || ''}
+                    onChange={(e: any) => {
+                        editHandler(row.id, e)
+                        // const temp = [...data]
+                        // const temp = data.map((d, i) => {
+                        //     if (i === dataIndex) {
+                        //         return Object.assign({}, d, {
+                        //             [e.target.name]: e.target.value,
+                        //         })
+                        //     }
+                        //     return d
+                        // })
+                        // setData(temp)
+                    }}
                 />
+            ) : (
+                row[col.id]
             )
         }
         if (col.isDate && row[col.id] !== undefined) {
@@ -387,6 +406,9 @@ const EditableTable: FunctionComponent<Props> = ({ config, ...props }) => {
                             {printCell(row, col)}
                         </TableCell>
                     ))}
+                    {row.id === editId && <TableCell key={row.id + '-' + 'ok'}>
+                      <CustomButton style={{height: 40, width: 20}} onClick={() => dispatch(setEditId(null))}>Ok</CustomButton>
+                    </TableCell>}
                     {menuOptions && (
                         <TableCell
                             key={i + '-c'}
@@ -421,6 +443,7 @@ const EditableTable: FunctionComponent<Props> = ({ config, ...props }) => {
                                                 key={i}
                                                 id={row[key] || row.id}
                                                 onClick={(e) => {
+                                                    debugger
                                                     handleClose()
                                                     callback &&
                                                         callback(

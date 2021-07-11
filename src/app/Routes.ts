@@ -5,6 +5,7 @@ import HomeView from 'pages/home/HomeView'
 import SparePartForm from 'pages/spare-part/SparePartForm'
 import SparePartView from 'pages/spare-part/SparePartView'
 import VehicleForm from 'pages/vehicle/VehicleForm'
+import BillForm1 from "../pages/bill/BillForm1";
 
 export interface IRoute {
     path: string
@@ -47,11 +48,11 @@ const Routes = [
     {
         path: '/bills/add',
         exact: true,
-        component: BillForm,
+        component: BillForm1,
     },
     {
         path: '/bills/add/:vehicleEntryId',
-        component: BillForm,
+        component: BillForm1,
     },
     {
         path: '/bills',

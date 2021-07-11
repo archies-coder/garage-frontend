@@ -84,7 +84,7 @@ export default function App(props: Props) {
     }
 
     React.useEffect(() => {
-        apis.get('/').then((res) => console.log(res))
+        apis.get('/').then((res) => console.log(res)).catch(err => console.error(err))
     }, [])
 
     return (

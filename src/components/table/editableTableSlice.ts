@@ -7,7 +7,7 @@ interface IState {
 }
 
 const initialState: IState = {
-    editId: '',
+    editId: '0',
     menuId: '',
     data: [],
 }

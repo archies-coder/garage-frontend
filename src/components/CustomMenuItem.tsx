@@ -6,3 +6,10 @@ export const CustomMenuItem = styled(Link)({
     color: '#192949',
     fontSize: '12px',
 })
+
+export const CustomPlainMenuItem = styled('span')({
+    textDecoration: 'none',
+    color: '#192949',
+    fontSize: '12px',
+    cursor: 'pointer',
+})
