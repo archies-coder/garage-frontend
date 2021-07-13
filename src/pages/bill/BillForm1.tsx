@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
 import {
     defaultBill,
+    fetchBills,
     saveBill,
     setCurrentBill,
     setCurrentVehicleEntry,
@@ -18,6 +19,7 @@ import EditableTable from '../../components/table/EditableTable'
 import TableConfig from './table/billFormTableConfig'
 import { setEditId } from 'components/table/editableTableSlice'
 import useBillFormStyles from './styles/billFormStyles'
+import { IGETBillsResponseEntity } from 'models/bill.model'
 
 export interface IBillFormProps extends RouteComponentProps<any> {}
 
@@ -41,6 +43,7 @@ export default function BillForm1(props: IBillFormProps) {
         currentBill,
         currentBillSpareParts,
         currentVehicleEntry,
+        bills,
     } = useSelector((state: RootState) => state.bills)
 
     const handleInputChange = (event: any) => {
@@ -126,6 +129,29 @@ export default function BillForm1(props: IBillFormProps) {
     })
 
     React.useEffect(() => {
+        if (vehicleEntryId) {
+            const temp = bills.filter(
+                (x) => x.vehicleEntryId === vehicleEntryId
+            )
+
+            const newBill: any = temp?.map(({ name, cost }) => ({
+                cost,
+                item: name,
+            }))
+            debugger
+            if (newBill?.length > 0) {
+                const temp2: any = {}
+                newBill.map((x: any, i: number) => {
+                    temp2[i] = x
+                })
+                dispatch(setEditId(''))
+                dispatch(setCurrentBill(temp2))
+            }
+        }
+    }, [bills])
+
+    React.useEffect(() => {
+        dispatch(fetchBills())
         dispatch(fetchVehicleEntries())
     }, [dispatch])
 

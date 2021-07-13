@@ -25,7 +25,12 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import { Skeleton } from '@material-ui/lab'
 import { format } from 'date-fns'
 import React, { FunctionComponent, useState } from 'react'
+import EnhancedTableHead from './EnhancedTableHead'
+import { useStyles } from './styles/EditableTStyles'
+import { StyledPaginationBox } from './styles/StyledPaginationBox'
 import TablePaginationActions from './TablePaginationActions'
+import TableSkeletonBody from './TableSkeletonBody'
+import TableFooterWithPagination from './TableWrapperFooter'
 
 interface IRowProps {
     [id: string]: any
@@ -143,62 +148,6 @@ const StyledMenuItem = withStyles((theme) => ({
     },
 }))(MenuItem)
 
-const StyledPaginationBox = withStyles((theme) => ({
-    root: {
-        '&': {
-            // textAlign: '-moz-center',
-            textAlign: '-webkit-center',
-            margin: '20px auto',
-            // fontSize: '16px'
-        },
-    },
-}))(Box)
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            // padding: 30
-            //  .MuiTableCell-head
-            '& .MuiTableCell-root': {
-                fontSize: '12px',
-                padding: '5px',
-                height: '45px',
-                borderBottom: 'none',
-            },
-            '& .MuiAvatar-root, & .MuiAvatar-circle, & .MuiAvatar-colorDefault': {
-                height: '30px',
-                width: '30px',
-            },
-            '& .MuiTable-root thead th': {
-                fontWeight: 'bold',
-            },
-        },
-        header: {
-            '& > *': {
-                fontWeight: 600,
-            },
-        },
-        cell: {
-            borderBottom: 'none',
-            //padding: (config: IConfigObject) => config.cellOptions ? config.cellOptions.padding : 'auto'
-        },
-        pagination: {
-            // fontSize: '25px'
-        },
-        visuallyHidden: {
-            border: 0,
-            clip: 'rect(0 0 0 0)',
-            height: 1,
-            margin: -1,
-            overflow: 'hidden',
-            padding: 0,
-            position: 'absolute',
-            top: 20,
-            width: 1,
-        },
-    })
-)
-
 export const TableWrapper: FunctionComponent<Props> = ({
     config,
     ...props
@@ -268,68 +217,9 @@ export const TableWrapper: FunctionComponent<Props> = ({
         </TableHead>
     )
 
-    function EnhancedTableHead(props: EnhancedTableProps) {
-        const {
-            isActive,
-            classes,
-            onSelectAllClick,
-            order,
-            orderBy,
-            numSelected,
-            rowCount,
-            onRequestSort,
-        } = props
-        const createSortHandler = (property: string) => (
-            event: React.MouseEvent<unknown>
-        ) => {
-            onRequestSort(event, property)
-        }
-
-        return (
-            <TableHead className={classes.header}>
-                <TableRow>
-                    {columns.map((headCell: any) => (
-                        <TableCell
-                            key={headCell.id}
-                            align={headCell.numeric ? 'right' : 'left'}
-                            padding={
-                                headCell.disablePadding ? 'none' : 'default'
-                            }
-                            sortDirection={
-                                orderBy === headCell.id ? order : false
-                            }
-                        >
-                            {headCell.isSort && (
-                                <TableSortLabel
-                                    // IconComponent={KeyboardArrowDownIcon}
-                                    active={orderBy === headCell.id}
-                                    direction={
-                                        orderBy === headCell.id ? order : 'asc'
-                                    }
-                                    onClick={createSortHandler(headCell.id)}
-                                >
-                                    {headCell.label}
-                                    {orderBy === headCell.id ? (
-                                        <span
-                                            className={classes.visuallyHidden}
-                                        >
-                                            {order === 'desc'
-                                                ? 'sorted descending'
-                                                : 'sorted ascending'}
-                                        </span>
-                                    ) : null}
-                                </TableSortLabel>
-                            )}
-                            {!headCell.isSort && headCell.label}
-                        </TableCell>
-                    ))}
-                </TableRow>
-            </TableHead>
-        )
-    }
-
     const SortableTableHeader = (
         <EnhancedTableHead
+            columns={columns}
             classes={classes}
             order={order}
             orderBy={orderBy}
@@ -414,30 +304,6 @@ export const TableWrapper: FunctionComponent<Props> = ({
         </TableBody>
     )
 
-    const skeletonBody = (
-        <TableBody>
-            {Array(20)
-                .fill(0)
-                .map((row: any, i: number) => (
-                    <TableRow key={i}>
-                        {columns.map((col: any) => (
-                            <TableCell key={row.id || i}>
-                                <Skeleton />
-                            </TableCell>
-                        ))}
-                        <TableCell className={classes.cell} align="left">
-                            <Button
-                                aria-controls="simple-menu"
-                                aria-haspopup="true"
-                            >
-                                {/* <MoreHorizIcon /> */}
-                            </Button>
-                        </TableCell>
-                    </TableRow>
-                ))}
-        </TableBody>
-    )
-
     const tableFooter = (
         <TableFooter>
             <TableRow>
@@ -463,6 +329,16 @@ export const TableWrapper: FunctionComponent<Props> = ({
             </TableRow>
         </TableFooter>
     )
+
+    const tableFooterProps = {
+        columns,
+        totalCount,
+        rowsPerPage,
+        page,
+        handleChangePage,
+        handleChangeRowsPerPage,
+    }
+
     return (
         <TableContainer
             {...props}
@@ -472,16 +348,20 @@ export const TableWrapper: FunctionComponent<Props> = ({
         >
             <Table>
                 {SortableTableHeader}
-                {config.isLoading && skeletonBody}
+                {config.isLoading && (
+                    <TableSkeletonBody columns={columns} classes={classes} />
+                )}
                 {!config.isLoading && body}
             </Table>
             {config.pagination === undefined ? (
                 <StyledPaginationBox justifyContent="end">
-                    {tableFooter}
+                    {<TableFooterWithPagination {...tableFooterProps} />}
                 </StyledPaginationBox>
             ) : (
                 <StyledPaginationBox justifyContent="end">
-                    {config.pagination && tableFooter}
+                    {config.pagination && (
+                        <TableFooterWithPagination {...tableFooterProps} />
+                    )}
                 </StyledPaginationBox>
             )}
         </TableContainer>

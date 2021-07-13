@@ -1,9 +1,8 @@
-import { apis } from './../Apis'
+import { apis, serverUrl } from './../Apis'
 import axios from 'axios'
 import { handleError, handleResponse } from './response'
 
-export const BASE_URL =
-    process.env.REACT_APP_SERVER_URL || 'http://localhost:8000/garage/v1.0'
+export const BASE_URL = serverUrl
 
 export interface IApiProvider {
     getAll: <T = void>(

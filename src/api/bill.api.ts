@@ -1,4 +1,8 @@
-import { IBill, IBillInput } from './../models/bill.model'
+import {
+    IBill,
+    IBillInput,
+    IGETBillsResponseEntity,
+} from './../models/bill.model'
 import { apiProvider, IApiProvider } from './utils/provider'
 
 const url = 'bills'
@@ -7,7 +11,7 @@ const single = 'bill'
 
 export type IBillResponse = {
     totalCount: number
-    data: IBill[]
+    data: IGETBillsResponseEntity[]
 }
 
 export async function getBillsData(

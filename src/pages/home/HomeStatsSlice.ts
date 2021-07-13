@@ -50,7 +50,6 @@ const homeStats = createSlice({
                 total_customers,
                 vehicleEntriestats,
             } = payload
-            debugger
             state.delivered = delivered
             state.in_garage = in_garage
             state.parts_used = parts_used
@@ -84,7 +83,6 @@ export const fetchHomeStats = (selectedDate?: string): AppThunk => async (
         const { data } = await getStats(
             selectedDate ? selectedDate : new Date().toISOString()
         )
-        debugger
         dispatch(getHomeStatsSuccess(data))
         // dispatch(getBackdropStop())
     } catch (err) {
