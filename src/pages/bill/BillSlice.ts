@@ -7,13 +7,13 @@ import Api from '../../api'
 import { getBackdropStart, getBackdropStop } from 'app/BackdropSlice'
 import { startSnackbar } from 'app/SnackbarSlice'
 import { AppThunk } from 'app/store'
-import { IBill, IBillInput } from 'models/bill.model'
+import { IBill, IBillInput, IGETBillsResponseEntity } from 'models/bill.model'
 import { Links } from 'parse-link-header'
 
 export interface BillsResult {
     //pageLinks: Links | null
     totalCount: number
-    data: IBill[]
+    data: IGETBillsResponseEntity[]
 }
 
 export interface IBillInputState {
@@ -50,8 +50,8 @@ export const defaultSparePartsInputState: IBillSparePartInputState = {
 }
 
 interface BillState {
-    bills: IBill[]
-    billsById: Record<string, IBill>
+    bills: IGETBillsResponseEntity[]
+    billsById: Record<string, IGETBillsResponseEntity>
     currentPageBills: number[]
     pageCount: number
     pageLinks: Links | null
@@ -160,6 +160,7 @@ export const saveBill = (
     callback?: () => void
 ): AppThunk => async (dispatch) => {
     try {
+        debugger
         dispatch(getBackdropStart())
         await Api.bill()
             .create(bill)

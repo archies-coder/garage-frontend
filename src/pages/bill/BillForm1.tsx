@@ -1,18 +1,25 @@
-import {Box, Grid, Paper,} from '@material-ui/core'
-import {ArrowBackIos} from '@material-ui/icons'
-import {RootState} from 'app/store'
+import { Box, Grid, Paper } from '@material-ui/core'
+import { ArrowBackIos } from '@material-ui/icons'
+import { RootState } from 'app/store'
 import CustomButton from 'components/inputs/Button'
 import TextInput from 'components/inputs/TextInput'
-import {ISingleVehicleEntry} from 'models/vehicleEntry.model'
-import {fetchVehicleEntries} from 'pages/home/HomeSlice'
+import { ISingleVehicleEntry } from 'models/vehicleEntry.model'
+import { fetchVehicleEntries } from 'pages/home/HomeSlice'
 import * as React from 'react'
-import {useDispatch, useSelector} from 'react-redux'
-import {RouteComponentProps} from 'react-router'
-import {useBillFormStyles} from './BillFormStyles'
-import {defaultBill, setCurrentBill, setCurrentVehicleEntry,} from './BillSlice'
-import EditableTable from "../../components/table/EditableTable";
-import TableConfig from "./BillTableConfig";
-import {setEditId} from 'components/table/editableTableSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { RouteComponentProps } from 'react-router'
+import {
+    defaultBill,
+    fetchBills,
+    saveBill,
+    setCurrentBill,
+    setCurrentVehicleEntry,
+} from './BillSlice'
+import EditableTable from '../../components/table/EditableTable'
+import TableConfig from './table/billFormTableConfig'
+import { setEditId } from 'components/table/editableTableSlice'
+import useBillFormStyles from './styles/billFormStyles'
+import { IGETBillsResponseEntity } from 'models/bill.model'
 
 export interface IBillFormProps extends RouteComponentProps<any> {}
 
@@ -36,6 +43,7 @@ export default function BillForm1(props: IBillFormProps) {
         currentBill,
         currentBillSpareParts,
         currentVehicleEntry,
+        bills,
     } = useSelector((state: RootState) => state.bills)
 
     const handleInputChange = (event: any) => {
@@ -69,13 +77,33 @@ export default function BillForm1(props: IBillFormProps) {
 
     const { vehicleEntryId } = props.match.params
 
+    const handleSubmit = async (e: any) => {
+        e.preventDefault()
+        try {
+            const items = Object.values(currentBill).map(({ item, cost }) => ({
+                name: item,
+                cost,
+            }))
+            const response = dispatch(
+                saveBill(
+                    {
+                        items,
+                        vehicleEntryId,
+                    },
+                    () => props.history.push('/')
+                )
+            )
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const getData = () => {
-        const temp = Object.entries(currentBill)
-        const data = temp.map(el => {
+        const data = Object.entries(currentBill).map((el) => {
             return {
                 item: el[1].item,
                 cost: el[1].cost,
-                id: el[0]
+                id: el[0],
             }
         })
         return data
@@ -85,13 +113,6 @@ export default function BillForm1(props: IBillFormProps) {
         isLoading: false,
         data: getData(),
         editHandler: (id: any, event: any) => {
-            console.log(currentBill[id], {
-                ...currentBill,
-                [id]: {
-                    ...currentBill[id],
-                    [event.target.name]: event.target.value,
-                },
-            })
             dispatch(
                 setCurrentBill({
                     ...currentBill,
@@ -104,10 +125,33 @@ export default function BillForm1(props: IBillFormProps) {
         },
         dispatchSetEditId: (id: string) => {
             dispatch(setEditId(id))
-        }
+        },
     })
 
     React.useEffect(() => {
+        if (vehicleEntryId) {
+            const temp = bills.filter(
+                (x) => x.vehicleEntryId === vehicleEntryId
+            )
+
+            const newBill: any = temp?.map(({ name, cost }) => ({
+                cost,
+                item: name,
+            }))
+            debugger
+            if (newBill?.length > 0) {
+                const temp2: any = {}
+                newBill.map((x: any, i: number) => {
+                    temp2[i] = x
+                })
+                dispatch(setEditId(''))
+                dispatch(setCurrentBill(temp2))
+            }
+        }
+    }, [bills])
+
+    React.useEffect(() => {
+        dispatch(fetchBills())
         dispatch(fetchVehicleEntries())
     }, [dispatch])
 
@@ -152,6 +196,7 @@ export default function BillForm1(props: IBillFormProps) {
                             {/* {saveButtonActive &&  */}
                             <CustomButton
                                 type="submit"
+                                onClick={handleSubmit}
                                 style={{
                                     height: '38px',
                                     width: '168px',
@@ -166,39 +211,34 @@ export default function BillForm1(props: IBillFormProps) {
                     </Grid>
                 </Grid>
 
-                <EditableTable config={tableConfig} />
-                <Grid container>
+                <EditableTable
+                    style={{ marginLeft: 64 }}
+                    config={tableConfig}
+                />
+
+                <Grid style={{ marginLeft: 64 }} container>
                     <Grid item>
-                        {/*<TextInput*/}
-                        {/*    style={{ marginTop: 10 }}*/}
-                        {/*    label="Item"*/}
-                        {/*    name="item"*/}
-                        {/*    onChange={(e: any) => {*/}
-                        {/*        // const temp = [...data]*/}
-                        {/*        // debugger*/}
-                        {/*        // const temp = data.map((d, i) => {*/}
-                        {/*        //     if (i === dataIndex) {*/}
-                        {/*        //         return Object.assign({}, d, {*/}
-                        {/*        //             [e.target.name]: e.target.value,*/}
-                        {/*        //         })*/}
-                        {/*        //     }*/}
-                        {/*        //     return d*/}
-                        {/*        // })*/}
-                        {/*        // setData(temp)*/}
-                        {/*    }}*/}
-                        {/*/>*/}
-                        <CustomButton onClick={() => {
-                            dispatch(setEditId(Object.keys(currentBill).length.toString()))
-                            dispatch(setCurrentBill({
-                                ...currentBill,
-                                [Object.keys(currentBill).length]: defaultBill
-                            }))
-                        }}>
+                        <CustomButton
+                            onClick={() => {
+                                dispatch(
+                                    setEditId(
+                                        Object.keys(
+                                            currentBill
+                                        ).length.toString()
+                                    )
+                                )
+                                dispatch(
+                                    setCurrentBill({
+                                        ...currentBill,
+                                        [Object.keys(currentBill)
+                                            .length]: defaultBill,
+                                    })
+                                )
+                            }}
+                        >
                             Add
                         </CustomButton>
                     </Grid>
-                    <Grid item></Grid>
-                    <Grid item></Grid>
                 </Grid>
             </Paper>
         </Grid>

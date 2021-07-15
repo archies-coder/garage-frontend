@@ -19,13 +19,13 @@ import * as React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
 import theme from 'theme'
-import { useBillFormStyles } from './BillFormStyles'
 import {
     addNewBillItem,
     addNewSparePart,
     setCurrentBill,
     setCurrentVehicleEntry,
 } from './BillSlice'
+import useBillFormStyles from './styles/billFormStyles'
 
 export interface IBillFormProps extends RouteComponentProps<any> {}
 

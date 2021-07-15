@@ -46,6 +46,7 @@ interface VehicleEntriestate {
     vehicles: any[]
     VehiclesByVehicleNo: any
     VehicleEntriesById: any
+    VehiclesById: any
     currentVehicleEntry: VehicleInfo
     currentPageVehicleEntries: number[]
     pageCount: number
@@ -60,6 +61,7 @@ const VehicleEntriesInitialState: VehicleEntriestate = {
     vehicles: [],
     VehiclesByVehicleNo: {},
     VehicleEntriesById: {},
+    VehiclesById: {},
     currentVehicleEntry: defaultVehicle,
     currentPageVehicleEntries: [],
     pageCount: 0,
@@ -97,6 +99,9 @@ const VehicleEntries = createSlice({
             state.vehicles.map(
                 (vehicle) =>
                     (state.VehiclesByVehicleNo[vehicle.vehicleNo] = vehicle)
+            )
+            state.vehicles.map(
+                (vehicle) => (state.VehiclesById[vehicle._id] = vehicle)
             )
         },
         getVehicleEntriesStart: startLoading,

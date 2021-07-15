@@ -1,8 +1,10 @@
 import axios, { AxiosInstance } from 'axios'
 
 export const serverUrl =
-    process.env.REACT_APP_SERVER_URL ||
-    'https://sag-backend.herokuapp.com/garage/v1.0'
+    process.env.NODE_ENV === 'production'
+        ? process.env.REACT_APP_SERVER_URL
+        : 'http://192.168.0.105:8080/garage/v1.0'
+// 'https://sag-backend.herokuapp.com/garage/v1.0'
 
 let user = sessionStorage.getItem('authUser')
 

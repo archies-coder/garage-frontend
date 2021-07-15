@@ -215,7 +215,7 @@ const HomeView: React.FC<Props> = (props) => {
                                 }} variant="contained" style={{ marginTop: '33px', marginLeft: '27px', height: '40px' }}
                             >Clear Filter</Button> */}
                                 </Box>
-                                <EditableTable
+                                <TableWrapper
                                     style={{
                                         marginTop: '17px',
                                         marginLeft: '32px',

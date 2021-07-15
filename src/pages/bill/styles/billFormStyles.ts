@@ -1,6 +1,6 @@
 import { makeStyles, Theme, createStyles } from '@material-ui/core'
 
-export const useBillFormStyles = makeStyles((theme: Theme) =>
+export default makeStyles((theme: Theme) =>
     createStyles({
         paper: {
             backgroundColor: '#E7ECF6',
